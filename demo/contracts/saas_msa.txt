@@ -1,0 +1,153 @@
+MASTER SERVICES AGREEMENT
+
+This Master Services Agreement (the "Agreement") is entered into as of 3 March 2026 (the "Effective Date") by and between NORTHWIND ANALYTICS INC., a Delaware corporation with offices at 400 Harrison Street, San Francisco, CA ("Provider"), and the customer identified in the applicable Order Form ("Customer").
+
+1. DEFINITIONS
+
+1.1 "Services" means the hosted analytics platform made available by Provider, as further described in the Service Description published at northwind-analytics.com/service-description, as such description may be updated from time to time.
+
+1.2 "Customer Data" means all data, content, and materials submitted to the Services by or on behalf of Customer, including personal data relating to Customer's own end users.
+
+1.3 "Documentation" means the user guides and technical materials made available by Provider.
+
+1.4 "Order Form" means the ordering document executed by the parties specifying the Services, the fees, and the Initial Term.
+
+2. PROVISION OF THE SERVICES
+
+2.1 Subject to Customer's payment of the Fees and compliance with this Agreement, Provider grants Customer a non-exclusive, non-transferable right to access and use the Services during the Term.
+
+2.2 Provider shall use commercially reasonable efforts to make the Services available 99.5% of the time, measured monthly, excluding scheduled maintenance and any period of degradation attributable to Customer's systems or connectivity.
+
+2.3 Customer acknowledges that the Services are provided on a shared, multi-tenant basis and that Provider may modify, suspend, or discontinue any feature or component of the Services at any time.
+
+3. TERM AND RENEWAL
+
+3.1 This Agreement commences on the Effective Date and continues for the Initial Term specified in the Order Form (the "Initial Term").
+
+3.2 Upon expiry of the Initial Term, this Agreement shall renew automatically for successive periods of twenty-four (24) months (each a "Renewal Term"), unless Customer delivers written notice of non-renewal in accordance with Section 17.4 within the notice window specified in Section 17.5.
+
+3.3 Fees applicable to any Renewal Term shall be Provider's then-current list fees. Provider shall notify Customer of the renewal fees not less than thirty (30) days before the commencement of the Renewal Term.
+
+4. FEES AND PAYMENT
+
+4.1 Customer shall pay the fees specified in the Order Form (the "Fees"). All Fees are non-refundable and are exclusive of taxes.
+
+4.2 Provider shall invoice Customer annually in advance. Customer shall pay each invoice within sixty (60) days of the invoice date.
+
+4.3 Any amount not paid when due shall accrue interest at the rate of two and one-half percent (2.5%) per month, compounded monthly, or the maximum rate permitted by law, whichever is greater.
+
+4.4 Invoices shall be deemed accepted and undisputed unless Customer delivers written notice of a good-faith dispute within ten (10) days of the invoice date.
+
+4.5 Customer authorises Provider to charge the payment method on file for all Fees, including any Fees applicable to a Renewal Term, without further authorisation.
+
+5. CUSTOMER OBLIGATIONS
+
+5.1 Customer shall not reverse engineer, decompile, or attempt to derive the source code of the Services.
+
+5.2 Customer is responsible for all activity occurring under its user accounts and for maintaining the confidentiality of its credentials.
+
+5.3 Customer shall comply with the Acceptable Use Policy published at northwind-analytics.com/aup, which forms part of this Agreement and which Provider may amend at its sole discretion by posting a revised version. Customer's continued use of the Services following the posting of a revised Acceptable Use Policy constitutes acceptance of it.
+
+6. INTELLECTUAL PROPERTY
+
+6.1 Provider retains all right, title, and interest in and to the Services, the Documentation, and all software, technology, and materials used to provide them.
+
+6.2 Customer retains ownership of Customer Data.
+
+6.3 Customer hereby assigns to Provider all right, title, and interest in and to any suggestions, enhancement requests, recommendations, or other feedback provided by Customer relating to the Services, and acknowledges that Provider may use such feedback for any purpose without restriction, attribution, or compensation.
+
+6.4 Provider may use Customer Data, in aggregated and de-identified form, to operate, analyse, improve, and develop the Services and Provider's other products, including for the training of machine learning models. This right shall survive termination of this Agreement in perpetuity.
+
+7. CONFIDENTIALITY
+
+7.1 "Confidential Information" means information disclosed by Provider to Customer that is designated as confidential or that reasonably should be understood to be confidential given the nature of the information.
+
+7.2 Customer shall not disclose Provider's Confidential Information to any third party and shall protect it using at least the degree of care it uses to protect its own confidential information.
+
+7.3 The obligations in this Section 7 shall continue in perpetuity.
+
+8. DATA
+
+8.1 Customer grants Provider a worldwide, royalty-free licence to host, copy, transmit, and display Customer Data as necessary to provide the Services.
+
+8.2 Provider maintains administrative and technical safeguards designed to protect Customer Data.
+
+8.3 Upon termination, Provider may delete Customer Data at any time after the effective date of termination.
+
+9. LIMITATION OF LIABILITY
+
+9.1 EXCEPT AS PROVIDED IN SECTION 9.3, THE TOTAL AGGREGATE LIABILITY OF PROVIDER ARISING OUT OF OR RELATING TO THIS AGREEMENT SHALL NOT EXCEED THE FEES PAID BY CUSTOMER IN THE THREE (3) MONTHS IMMEDIATELY PRECEDING THE EVENT GIVING RISE TO THE CLAIM.
+
+9.2 THE TOTAL AGGREGATE LIABILITY OF CUSTOMER ARISING OUT OF OR RELATING TO THIS AGREEMENT SHALL NOT EXCEED THE TOTAL FEES PAYABLE UNDER THE APPLICABLE ORDER FORM OVER THE FULL TERM.
+
+9.3 NOTHING IN THIS SECTION 9 SHALL LIMIT THE LIABILITY OF EITHER PARTY FOR MATTERS SET OUT IN SECTION 14.
+
+9.4 IN NO EVENT SHALL PROVIDER BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES, OR FOR ANY LOSS OF PROFITS, REVENUE, OR DATA, HOWEVER CAUSED.
+
+10. SERVICE LEVELS
+
+10.1 If Provider fails to meet the availability commitment in Section 2.2 in any calendar month, Customer may request a service credit equal to five percent (5%) of the monthly Fees for that month.
+
+10.2 To receive a service credit, Customer must submit a written request within ten (10) days of the end of the affected month.
+
+10.3 Service credits are Customer's sole and exclusive remedy for any failure by Provider to meet the availability commitment or any other performance commitment under this Agreement.
+
+11. WARRANTIES
+
+11.1 Each party represents that it has the authority to enter into this Agreement.
+
+11.2 EXCEPT AS EXPRESSLY SET OUT IN THIS AGREEMENT, THE SERVICES ARE PROVIDED "AS IS" AND PROVIDER DISCLAIMS ALL WARRANTIES, EXPRESS OR IMPLIED, INCLUDING ANY IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT.
+
+12. TERMINATION
+
+12.1 Provider may terminate this Agreement at any time, for any reason or no reason, upon thirty (30) days' written notice to Customer.
+
+12.2 Customer may terminate this Agreement only for Provider's material breach that remains uncured ninety (90) days after Customer's written notice describing the breach in reasonable detail.
+
+12.3 Upon any termination or expiry, all Fees paid or payable for the then-current Term shall be non-refundable and shall become immediately due.
+
+12.4 Provider may suspend the Services immediately, without notice, if Provider determines in its sole discretion that Customer's use poses a risk to the Services or to any other customer.
+
+13. ASSIGNMENT
+
+13.1 Customer may not assign or transfer this Agreement, in whole or in part, without Provider's prior written consent, which may be withheld in Provider's sole discretion.
+
+13.2 Provider may assign this Agreement without Customer's consent to any affiliate or in connection with any merger, acquisition, reorganisation, or sale of all or substantially all of its assets.
+
+14. INDEMNIFICATION
+
+14.1 Customer shall defend, indemnify, and hold harmless Provider, its affiliates, and their respective officers, directors, employees, and agents from and against any and all claims, damages, losses, liabilities, costs, and expenses (including reasonable attorneys' fees) arising out of or relating to (a) Customer Data, (b) Customer's use of the Services, (c) Customer's breach of this Agreement, or (d) any claim that Customer Data infringes or misappropriates the rights of any third party.
+
+14.2 The indemnification obligations set out in Section 14.1 are not subject to the limitations of liability set out in Section 9.
+
+14.3 Provider shall have the right to control the defence and settlement of any claim for which it is indemnified under Section 14.1, and Customer shall cooperate fully with Provider at Customer's own expense.
+
+15. NON-SOLICITATION AND EXCLUSIVITY
+
+15.1 During the Term and for a period of twenty-four (24) months following termination, Customer shall not, directly or indirectly, engage any third party to provide analytics services substantially similar to the Services in respect of the data sets processed under this Agreement.
+
+15.2 During the Term and for a period of twelve (12) months following termination, Customer shall not solicit for employment any employee of Provider with whom Customer had contact in connection with this Agreement.
+
+16. GOVERNING LAW AND DISPUTES
+
+16.1 This Agreement is governed by the laws of the State of Delaware, without regard to its conflict of laws principles.
+
+16.2 Any dispute arising out of or relating to this Agreement shall be finally resolved by binding arbitration administered in Wilmington, Delaware under the rules of the American Arbitration Association. Each party shall bear one half of the arbitrator's fees and administrative costs.
+
+16.3 Each party waives any right to a trial by jury and any right to participate in a class or representative action.
+
+17. GENERAL
+
+17.1 This Agreement, together with any Order Form and the policies incorporated by reference, constitutes the entire agreement between the parties.
+
+17.2 Provider may amend this Agreement, other than the Fees set out in an Order Form, upon thirty (30) days' notice by posting a revised version to northwind-analytics.com/terms. Customer's continued use of the Services after the effective date of such revision constitutes acceptance.
+
+17.3 No failure or delay in exercising any right shall operate as a waiver of it.
+
+17.4 All notices to Provider must be delivered by registered post or by internationally recognised courier to Provider's registered office, marked for the attention of the General Counsel. Notice by email shall not be effective for any purpose under this Agreement.
+
+17.5 Any notice of non-renewal under Section 3.2 must be received by Provider not less than one hundred and twenty (120) days prior to the end of the then-current Term.
+
+17.6 The provisions of Sections 4, 6, 7, 9, 14, 15, and 16 shall survive termination or expiry of this Agreement.
+
+17.7 If any provision of this Agreement is held to be unenforceable, that provision shall be modified to the minimum extent necessary and the remainder shall continue in full force.

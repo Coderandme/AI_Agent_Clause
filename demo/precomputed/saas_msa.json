@@ -1,0 +1,1108 @@
+{
+  "slug": "saas_msa",
+  "filename": "saas_msa.pdf",
+  "blurb": "SaaS Master Services Agreement \u2014 synthetic, written for this project and seeded with realistic adverse clauses. Note the liability cap in \u00a79 that \u00a714.2 quietly lifts the indemnity out of, five pages later.",
+  "page_count": 5,
+  "char_count": 11326,
+  "scan_model": "gpt-5.6-sol",
+  "rule_library_version": "d93f7291e878",
+  "prompt_version": "b1a64a126b32",
+  "summary": "The worst term leaves you with unlimited exposure: you must pay for a sweeping range of claims tied to your data or use of the service, while Northwind gives you no matching protection. For ordinary claims, Northwind's risk stops at three months of fees but yours can run to the full contract value, and if the service fails, your only remedy is a 5% credit that you must claim within 10 days.",
+  "findings": [
+    {
+      "rule_id": "asymmetric_liability_cap",
+      "severity": "high",
+      "title": "Your cap is the full term; theirs is only three months",
+      "exposure": "Provider's ordinary liability is capped at three months of fees, while Customer's is capped at all fees payable over the full term. The protection is weaker for Customer even before the uncapped, one-way indemnity is considered.",
+      "recommendation": "Ask for one mutual cap based on at least 12 months of fees, with the same amount and the same carve-outs applying to both parties.",
+      "quoted_text": "9.1 EXCEPT AS PROVIDED IN SECTION 9.3, THE TOTAL AGGREGATE LIABILITY OF\nPROVIDER ARISING OUT OF OR RELATING TO THIS AGREEMENT SHALL NOT EXCEED THE\nFEES PAID BY CUSTOMER IN THE THREE (3) MONTHS IMMEDIATELY PRECEDING THE\nEVENT GIVING RISE TO THE CLAIM.\n9.2 THE TOTAL AGGREGATE LIABILITY OF CUSTOMER ARISING OUT OF OR RELATING TO\nTHIS AGREEMENT SHALL NOT EXCEED THE TOTAL FEES PAYABLE UNDER THE\nAPPLICABLE ORDER FORM OVER THE FULL TERM.",
+      "confidence": "high",
+      "verified": true,
+      "matched_text": "9.1 EXCEPT AS PROVIDED IN SECTION 9.3, THE TOTAL AGGREGATE LIABILITY OF\nPROVIDER ARISING OUT OF OR RELATING TO THIS AGREEMENT SHALL NOT EXCEED THE\nFEES PAID BY CUSTOMER IN THE THREE (3) MONTHS IMMEDIATELY PRECEDING THE\nEVENT GIVING RISE TO THE CLAIM.\n9.2 THE TOTAL AGGREGATE LIABILITY OF CUSTOMER ARISING OUT OF OR RELATING TO\nTHIS AGREEMENT SHALL NOT EXCEED THE TOTAL FEES PAYABLE UNDER THE\nAPPLICABLE ORDER FORM OVER THE FULL TERM.",
+      "char_start": 5450,
+      "char_end": 5883,
+      "page_number": 3
+    },
+    {
+      "rule_id": "missing_sla_or_remedy",
+      "severity": "medium",
+      "title": "An SLA miss buys only a 5% credit claimed in 10 days",
+      "exposure": "If Provider misses its 99.5% availability promise or any other performance commitment, Customer's only remedy is a 5% monthly credit. Customer loses even that limited remedy unless it identifies the failure and submits a written request within ten days after month-end.",
+      "recommendation": "Ask for tiered credits that increase with outage severity, at least 30 days to claim them, and a termination and refund right for repeated or prolonged failures; credits should not be the sole remedy for sustained outages.",
+      "quoted_text": "10.1 If Provider fails to meet the availability commitment in Section 2.2 in any calendar month, Customer may\nrequest a service credit equal to five percent (5%) of the monthly Fees for that month.\n10.2 To receive a service credit, Customer must submit a written request within ten (10) days of the end of the\naffected month.\n10.3 Service credits are Customer's sole and exclusive remedy for any failure by Provider to meet the availability\ncommitment or any other performance commitment under this Agreement.",
+      "confidence": "high",
+      "verified": true,
+      "matched_text": "10.1 If Provider fails to meet the availability commitment in Section 2.2 in any calendar month, Customer may\nrequest a service credit equal to five percent (5%) of the monthly Fees for that month.\n10.2 To receive a service credit, Customer must submit a written request within ten (10) days of the end of the\naffected month.\n10.3 Service credits are Customer's sole and exclusive remedy for any failure by Provider to meet the availability\ncommitment or any other performance commitment under this Agreement.",
+      "char_start": 6188,
+      "char_end": 6697,
+      "page_number": 3
+    },
+    {
+      "rule_id": "one_sided_indemnity",
+      "severity": "critical",
+      "title": "You alone cover sweeping claims tied to service use",
+      "exposure": "Customer must fund Provider's defence and losses for any claim relating to Customer Data, use of the Services, or breach, but Provider gives no indemnity in return. The broad phrase \u201carising out of or relating to\u201d can pull in claims involving Provider's own defective service, and this obligation is uncapped.",
+      "recommendation": "Ask for mutual indemnities limited to third-party claims caused by each party's breach, negligence, misconduct, or IP infringement; exclude claims caused by Provider and put indemnities inside the liability cap.",
+      "quoted_text": "14.1 Customer shall defend, indemnify, and hold harmless Provider, its affiliates, and their respective officers,\ndirectors, employees, and agents from and against any and all claims, damages, losses, liabilities, costs, and\nexpenses (including reasonable attorneys' fees) arising out of or relating to (a) Customer Data, (b) Customer's use\nof the Services, (c) Customer's breach of this Agreement, or (d) any claim that Customer Data infringes or\nmisappropriates the rights of any third party.",
+      "confidence": "high",
+      "verified": true,
+      "matched_text": "14.1 Customer shall defend, indemnify, and hold harmless Provider, its affiliates, and their respective officers,\ndirectors, employees, and agents from and against any and all claims, damages, losses, liabilities, costs, and\nexpenses (including reasonable attorneys' fees) arising out of or relating to (a) Customer Data, (b) Customer's use\nof the Services, (c) Customer's breach of this Agreement, or (d) any claim that Customer Data infringes or\nmisappropriates the rights of any third party.",
+      "char_start": 8137,
+      "char_end": 8631,
+      "page_number": 4
+    },
+    {
+      "rule_id": "uncapped_liability",
+      "severity": "critical",
+      "title": "Your broad indemnity has no liability ceiling",
+      "exposure": "The apparent Customer cap does not cover the Section 14 indemnity. Because that indemnity reaches any and all claims, damages, liabilities, costs, and legal fees relating to Customer Data, service use, or breach, one dispute could cost far more than the contract value.",
+      "recommendation": "Ask for Section 14 obligations to remain inside a mutual aggregate cap, ideally tied to fees paid in the preceding 12 months, with only narrow and expressly agreed exceptions.",
+      "quoted_text": "14.2 The indemnification obligations set out in Section 14.1 are not subject to the limitations of liability set out in\nSection 9.",
+      "confidence": "high",
+      "verified": true,
+      "matched_text": "14.2 The indemnification obligations set out in Section 14.1 are not subject to the limitations of liability set out in\nSection 9.",
+      "char_start": 8632,
+      "char_end": 8762,
+      "page_number": 4
+    },
+    {
+      "rule_id": "assignment_change_of_control",
+      "severity": "high",
+      "title": "Provider can transfer the deal to an acquirer or competitor",
+      "exposure": "Provider can move the agreement to an acquirer without Customer's consent, while Customer cannot assign even with a sale unless Provider agrees. Because Customer is also barred from using similar analytics providers for 24 months after termination, the contract could follow Provider to an unwanted owner without giving Customer an exit.",
+      "recommendation": "Ask for assignment restrictions to be mutual and for Customer to be allowed to assign in a merger, reorganisation, or sale of substantially all assets. Also ask for a right to terminate without penalty and receive a pro-rata refund if Provider is acquired by a competitor.",
+      "quoted_text": "13.1 Customer may not assign or transfer this Agreement, in whole or in part, without Provider's prior written\nconsent, which may be withheld in Provider's sole discretion.\n13.2 Provider may assign this Agreement without Customer's consent to any affiliate or in connection with any\nmerger, acquisition, reorganisation, or sale of all or substantially all of its assets.",
+      "confidence": "high",
+      "verified": true,
+      "matched_text": "13.1 Customer may not assign or transfer this Agreement, in whole or in part, without Provider's prior written\nconsent, which may be withheld in Provider's sole discretion.\n13.2 Provider may assign this Agreement without Customer's consent to any affiliate or in connection with any\nmerger, acquisition, reorganisation, or sale of all or substantially all of its assets.",
+      "char_start": 7746,
+      "char_end": 8116,
+      "page_number": 4
+    },
+    {
+      "rule_id": "auto_renewal",
+      "severity": "high",
+      "title": "Miss the 120-day window and renew for another 24 months",
+      "exposure": "The agreement automatically locks Customer into another 24-month term unless non-renewal reaches Provider at least 120 days before expiry. Notice must be sent by registered post or recognised courier, email is ineffective, and Provider discloses renewal pricing only 30 days before renewal\u201490 days after Customer's cancellation deadline.",
+      "recommendation": "Ask for renewal only by mutual written agreement. If Provider refuses, ask for 12-month renewals, a 30-day non-renewal deadline, email notice, and a pricing notice before the cancellation window closes.",
+      "quoted_text": "3.2 Upon expiry of the Initial Term, this Agreement shall renew automatically for successive periods of\ntwenty-four (24) months (each a \"Renewal Term\"), unless Customer delivers written notice of non-renewal in\naccordance with Section 17.4 within the notice window specified in Section 17.5.",
+      "confidence": "high",
+      "verified": true,
+      "matched_text": "3.2 Upon expiry of the Initial Term, this Agreement shall renew automatically for successive periods of\ntwenty-four (24) months (each a \"Renewal Term\"), unless Customer delivers written notice of non-renewal in\naccordance with Section 17.4 within the notice window specified in Section 17.5.",
+      "char_start": 1801,
+      "char_end": 2092,
+      "page_number": 1
+    },
+    {
+      "rule_id": "unilateral_termination",
+      "severity": "critical",
+      "title": "Provider can exit in 30 days while Customer stays liable",
+      "exposure": "Provider can end the deal at any time for no reason on 30 days' notice, but Customer can leave only after a material breach remains uncured for 90 days. Even when Provider walks away, all fees for the current term remain non-refundable and immediately due, leaving Customer to fund replacement service while paying for service it no longer receives.",
+      "recommendation": "Ask for mutual termination-for-convenience rights on equal notice. At minimum, require a pro-rata refund of prepaid fees, cancellation of unearned future fees, Customer Data export assistance, and a reasonable transition period whenever Provider terminates for convenience.",
+      "quoted_text": "12.1 Provider may terminate this Agreement at any time, for any reason or no reason, upon thirty (30) days'\nwritten notice to Customer.\n12.2 Customer may terminate this Agreement only for Provider's material breach that remains uncured ninety (90)\ndays after Customer's written notice describing the breach in reasonable detail.\n12.3 Upon any termination or expiry, all Fees paid or payable for the then-current Term shall be non-refundable\nand shall become immediately due.",
+      "confidence": "high",
+      "verified": true,
+      "matched_text": "12.1 Provider may terminate this Agreement at any time, for any reason or no reason, upon thirty (30) days'\nwritten notice to Customer.\n\f12.2 Customer may terminate this Agreement only for Provider's material breach that remains uncured ninety (90)\ndays after Customer's written notice describing the breach in reasonable detail.\n12.3 Upon any termination or expiry, all Fees paid or payable for the then-current Term shall be non-refundable\nand shall become immediately due.",
+      "char_start": 7066,
+      "char_end": 7541,
+      "page_number": 3
+    },
+    {
+      "rule_id": "confidentiality_defect",
+      "severity": "high",
+      "title": "Only Provider's confidential information is protected",
+      "exposure": "The confidentiality definition covers only information Provider discloses, so Customer's sensitive business, technical, and end-user information receives no contractual confidentiality protection. The clause also omits the standard public-domain, prior-knowledge, independent-development, and legally required disclosure exceptions, while imposing perpetual duties on Customer.",
+      "recommendation": "Ask for mutual confidentiality obligations, standard exceptions for public, previously known, independently developed, third-party received, and legally compelled information, and a 3\u20135 year term except for trade secrets, which should remain protected while legally secret.",
+      "quoted_text": "\"Confidential Information\" means information disclosed by Provider to Customer that is designated as confidential or that reasonably should be understood to be confidential given the nature of the information.",
+      "confidence": "high",
+      "verified": true,
+      "matched_text": "\"Confidential Information\" means information disclosed by Provider to Customer that is designated as\nconfidential or that reasonably should be understood to be confidential given the nature of the information.",
+      "char_start": 4582,
+      "char_end": 4791,
+      "page_number": 2
+    },
+    {
+      "rule_id": "missing_data_protection",
+      "severity": "high",
+      "title": "Personal data lacks a DPA and can train Provider's models",
+      "exposure": "Customer Data expressly includes end-user personal data, but the agreement has no DPA, breach-notification deadline, subprocessor controls, processing instructions, or guaranteed return or deletion. Provider can also use de-identified Customer Data to train machine-learning models and keep that right forever, leaving Customer with weak control over data for which it may remain accountable.",
+      "recommendation": "Ask for a signed DPA covering processing instructions, security standards, subprocessors, assistance with data-subject requests, breach notice within 72 hours, and prompt deletion or return with certification. Also prohibit using Customer Data for model training or products other than the contracted Services, even if aggregated or de-identified.",
+      "quoted_text": "Provider may use Customer Data, in aggregated and de-identified form, to operate, analyse, improve, and develop the Services and Provider's other products, including for the training of machine learning models. This right shall survive termination of this Agreement in perpetuity.",
+      "confidence": "high",
+      "verified": true,
+      "matched_text": "Provider may use Customer Data, in aggregated and de-identified form, to operate, analyse, improve, and\ndevelop the Services and Provider's other products, including for the training of machine learning models. This\nright shall survive termination of this Agreement in perpetuity.",
+      "char_start": 4278,
+      "char_end": 4558,
+      "page_number": 2
+    },
+    {
+      "rule_id": "non_compete",
+      "severity": "high",
+      "title": "Customer cannot use similar analytics providers for two years",
+      "exposure": "Customer is barred worldwide from engaging any third party for substantially similar analytics services involving the covered data sets during the agreement and for 24 months after it ends. This can lock Customer into Provider, block migration or dual-sourcing, and interfere with continued use of its own data after termination.",
+      "recommendation": "Ask to delete Section 15.1. If Provider refuses, limit it to misuse of Provider's confidential information, with no restriction on hiring competing vendors, migrating the covered data sets, or operating after termination.",
+      "quoted_text": "During the Term and for a period of twenty-four (24) months following termination, Customer shall not, directly or indirectly, engage any third party to provide analytics services substantially similar to the Services in respect of the data sets processed under this Agreement.",
+      "confidence": "high",
+      "verified": true,
+      "matched_text": "During the Term and for a period of twenty-four (24) months following termination, Customer shall not,\ndirectly or indirectly, engage any third party to provide analytics services substantially similar to the Services in\nrespect of the data sets processed under this Agreement.",
+      "char_start": 9015,
+      "char_end": 9292,
+      "page_number": 4
+    },
+    {
+      "rule_id": "overbroad_ip_assignment",
+      "severity": "medium",
+      "title": "Provider owns every suggestion without payment or attribution",
+      "exposure": "Any suggestion, recommendation, or enhancement request Customer provides becomes Provider's property outright, with unrestricted use and no attribution or compensation. Although Customer keeps ownership of Customer Data, the feedback assignment could capture Customer-originated product concepts or workflow innovations rather than merely granting Provider permission to use routine comments.",
+      "recommendation": "Ask to replace the assignment with a non-exclusive, royalty-free licence limited to feedback voluntarily provided about the Services, excluding Customer Data, confidential information, pre-existing IP, and Customer's general business methods or product concepts.",
+      "quoted_text": "Customer hereby assigns to Provider all right, title, and interest in and to any suggestions, enhancement requests, recommendations, or other feedback provided by Customer relating to the Services, and acknowledges that Provider may use such feedback for any purpose without restriction, attribution, or compensation.",
+      "confidence": "high",
+      "verified": true,
+      "matched_text": "Customer hereby assigns to Provider all right, title, and interest in and to any suggestions, enhancement\nrequests, recommendations, or other feedback provided by Customer relating to the Services, and acknowledges\nthat Provider may use such feedback for any purpose without restriction, attribution, or compensation.",
+      "char_start": 3956,
+      "char_end": 4273,
+      "page_number": 2
+    },
+    {
+      "rule_id": "payment_terms",
+      "severity": "high",
+      "title": "2.5% monthly compound interest and only 10 days to dispute",
+      "exposure": "A late amount accrues 2.5% interest every month, compounded, while an invoice becomes accepted if Customer does not dispute it within 10 days. Provider can also auto-charge renewal fees without fresh approval, so these terms amplify the uncapped renewal increase and can turn an overlooked or disputed bill into a substantial cash cost.",
+      "recommendation": "Ask for simple interest capped at 1.5% per month or the legal maximum, whichever is lower; at least 30 days to dispute invoices; no interest on good-faith disputed amounts; and fresh written approval before charging any renewal fee.",
+      "quoted_text": "4.3 Any amount not paid when due shall accrue interest at the rate of two and one-half percent (2.5%) per month,\ncompounded monthly, or the maximum rate permitted by law, whichever is greater.\n4.4 Invoices shall be deemed accepted and undisputed unless Customer delivers written notice of a good-faith\ndispute within ten (10) days of the invoice date.\n4.5 Customer authorises Provider to charge the payment method on file for all Fees, including any Fees applicable\nto a Renewal Term, without further authorisation.",
+      "confidence": "high",
+      "verified": true,
+      "matched_text": "4.3 Any amount not paid when due shall accrue interest at the rate of two and one-half percent (2.5%) per month,\ncompounded monthly, or the maximum rate permitted by law, whichever is greater.\n4.4 Invoices shall be deemed accepted and undisputed unless Customer delivers written notice of a good-faith\ndispute within ten (10) days of the invoice date.\n4.5 Customer authorises Provider to charge the payment method on file for all Fees, including any Fees applicable\nto a Renewal Term, without further authorisation.",
+      "char_start": 2588,
+      "char_end": 3103,
+      "page_number": 2
+    },
+    {
+      "rule_id": "uncapped_price_escalation",
+      "severity": "high",
+      "title": "Renewal jumps to any list price Provider chooses",
+      "exposure": "There is no ceiling on the renewal price: Customer is moved to Provider's then-current list fees. The price arrives only 30 days before renewal, but Customer must opt out 120 days before renewal, so Customer can be locked into a 24-month term before learning the price and then charged automatically.",
+      "recommendation": "Ask to cap each renewal increase at the lower of 3% or CPI, require at least 150 days' advance price notice, and give Customer 30 days after receiving that notice to reject the increase and terminate without penalty.",
+      "quoted_text": "3.3 Fees applicable to any Renewal Term shall be Provider's then-current list fees. Provider shall notify Customer\nof the renewal fees not less than thirty (30) days before the commencement of the Renewal Term.",
+      "confidence": "high",
+      "verified": true,
+      "matched_text": "3.3 Fees applicable to any Renewal Term shall be Provider's then-current list fees. Provider shall notify Customer\nof the renewal fees not less than thirty (30) days before the commencement of the Renewal Term.",
+      "char_start": 2093,
+      "char_end": 2303,
+      "page_number": 1
+    },
+    {
+      "rule_id": "unfavorable_forum",
+      "severity": "medium",
+      "title": "All disputes require fee-split arbitration in Wilmington",
+      "exposure": "Customer must pursue every dispute through binding arbitration in Wilmington, Delaware, and pay half the arbitrator and administrative costs regardless of claim size. If Customer is based elsewhere or the claim is modest, travel and arbitration costs may make enforcement commercially pointless; jury and class procedures are also waived.",
+      "recommendation": "Ask for remote arbitration or the defendant's home jurisdiction, permit either party to use small-claims court for eligible disputes, and require Provider to bear arbitration fees beyond ordinary court filing costs where Customer brings the claim.",
+      "quoted_text": "16.2 Any dispute arising out of or relating to this Agreement shall be finally resolved by binding arbitration\nadministered in Wilmington, Delaware under the rules of the American Arbitration Association. Each party shall\nbear one half of the arbitrator's fees and administrative costs.",
+      "confidence": "high",
+      "verified": true,
+      "matched_text": "16.2 Any dispute arising out of or relating to this Agreement shall be finally resolved by binding arbitration\nadministered in Wilmington, Delaware under the rules of the American Arbitration Association. Each party shall\nbear one half of the arbitrator's fees and administrative costs.",
+      "char_start": 9661,
+      "char_end": 9947,
+      "page_number": 4
+    },
+    {
+      "rule_id": "unilateral_amendment",
+      "severity": "high",
+      "title": "Provider can rewrite the deal by posting new terms",
+      "exposure": "Provider can change nearly the entire Agreement on 30 days' notice through a website posting, and Customer's continued use is treated as consent. Separate clauses also let Provider revise the Acceptable Use Policy at its sole discretion and update the online Service Description, so Customer may lose rights or functionality without signing anything and has no penalty-free exit right.",
+      "recommendation": "Ask that material changes to the Agreement, Service Description, or incorporated policies require Customer's written agreement; at minimum, require direct written notice and a 30-day right to terminate without penalty or refund prepaid fees if Customer rejects a material change.",
+      "quoted_text": "17.2 Provider may amend this Agreement, other than the Fees set out in an Order Form, upon thirty (30) days'\nnotice by posting a revised version to northwind-analytics.com/terms. Customer's continued use of the Services\nafter the effective date of such revision constitutes acceptance.",
+      "confidence": "high",
+      "verified": true,
+      "matched_text": "17.2 Provider may amend this Agreement, other than the Fees set out in an Order Form, upon thirty (30) days'\nnotice by posting a revised version to northwind-analytics.com/terms. Customer's continued use of the Services\nafter the effective date of such revision constitutes acceptance.",
+      "char_start": 10227,
+      "char_end": 10512,
+      "page_number": 5
+    }
+  ],
+  "unverified_count": 0,
+  "absences": [],
+  "key_terms": {
+    "parties": [
+      "NORTHWIND ANALYTICS INC.",
+      "the customer identified in the applicable Order Form"
+    ],
+    "effective_date": "3 March 2026",
+    "initial_term": "The Initial Term specified in the Order Form",
+    "renewal": "Automatic successive twenty-four (24) month Renewal Terms unless Customer's written non-renewal notice is received at least one hundred and twenty (120) days before the current Term ends",
+    "notice_period": "Customer non-renewal notice must be received at least one hundred and twenty (120) days before the current Term ends and must be sent by registered post or internationally recognised courier; Provider may terminate on thirty (30) days' written notice",
+    "payment_terms": "Invoiced annually in advance; due within sixty (60) days; all Fees non-refundable; 2.5% monthly interest compounded monthly or the maximum permitted rate, whichever is greater; invoices deemed accepted after 10 days; automatic charge authority",
+    "liability_cap": "Provider: Fees paid in the three (3) months before the claim event. Customer: total Fees payable over the full applicable Order Form term. Section 14 indemnification is outside the caps, leaving Customer's indemnity uncapped.",
+    "governing_law": "Delaware law; binding AAA arbitration in Wilmington, Delaware, with arbitrator and administrative fees split equally",
+    "termination_rights": "Provider may terminate at any time for any reason or no reason on thirty (30) days' written notice. Customer may terminate only for Provider's material breach left uncured for ninety (90) days; current-Term Fees remain non-refundable and immediately due."
+  },
+  "trace": [
+    {
+      "at": 7.11,
+      "kind": "tool_call",
+      "name": "get_rule_detail",
+      "input": {
+        "rule_id": "asymmetric_liability_cap"
+      }
+    },
+    {
+      "at": 7.11,
+      "kind": "tool_result",
+      "name": "get_rule_detail",
+      "output": {
+        "rule_id": "asymmetric_liability_cap",
+        "title": "Liability cap protects them, not you",
+        "default_severity": "high",
+        "exposure": "Their exposure is capped and yours is not \u2014 or theirs is capped far lower \u2014 so the same failure costs you many times what it would cost them.",
+        "detection_guidance": "Compare the two directions explicitly. Asymmetry is often achieved through drafting rather than through numbers: a cap that applies to \"Provider's liability\" while the customer's obligations are addressed in a separate, uncapped indemnity is asymmetric even though both parties appear to have a cap.\nAlso compare the multipliers. \"Provider's liability shall not exceed fees paid in the prior 3 months\" against a customer cap of 12 months' fees is a 4x asymmetry stated quietly.\nNote the direction of the asymmetry relative to the reader. We review on behalf of the party RECEIVING the contract, so a cap favouring the drafter is a finding; one favouring the reader is not.",
+        "recommended_redline": "Ask for the cap to be mutual and set at the same multiple in both directions, with the same carve-outs applying to both parties."
+      }
+    },
+    {
+      "at": 7.11,
+      "kind": "tool_call",
+      "name": "get_rule_detail",
+      "input": {
+        "rule_id": "missing_sla_or_remedy"
+      }
+    },
+    {
+      "at": 7.11,
+      "kind": "tool_result",
+      "name": "get_rule_detail",
+      "output": {
+        "rule_id": "missing_sla_or_remedy",
+        "title": "Performance promised, but nothing happens if they miss it",
+        "default_severity": "medium",
+        "exposure": "They commit to a level of service, but there is no consequence when they fail to deliver it \u2014 so the commitment is decorative.",
+        "detection_guidance": "A service level without a REMEDY is the finding. Look for uptime or response-time commitments and then ask what happens when they are breached. If the answer is nothing, or only \"Provider will use commercially reasonable efforts to restore service\", the SLA has no teeth.\nWhere service credits do exist, check whether they are the SOLE AND EXCLUSIVE remedy. That phrase converts a service failure from a breach you could sue over into a small discount, and it is easy to skim past.\nAlso check whether claiming the credit requires the customer to notice and file within a short window \u2014 a remedy that expires in 10 days is a remedy most customers will never collect.",
+        "recommended_redline": "Ask for meaningful service credits that scale with the severity of the failure, for a termination right if the SLA is missed repeatedly, and for the credits NOT to be the sole remedy for a sustained outage."
+      }
+    },
+    {
+      "at": 7.11,
+      "kind": "tool_call",
+      "name": "get_rule_detail",
+      "input": {
+        "rule_id": "one_sided_indemnity"
+      }
+    },
+    {
+      "at": 7.11,
+      "kind": "tool_result",
+      "name": "get_rule_detail",
+      "output": {
+        "rule_id": "one_sided_indemnity",
+        "title": "You indemnify them, they don't indemnify you",
+        "default_severity": "critical",
+        "exposure": "You would cover their legal costs and damages for claims arising from their own conduct \u2014 a lawsuit they caused can become a bill you pay.",
+        "detection_guidance": "Identify who indemnifies whom, and for what. Look for indemnity obligations that run in one direction only, or that are grossly broader in one direction.\nThe dangerous drafting is usually in the SCOPE, not the existence: an indemnity for \"any claim arising out of or relating to Customer's use of the Services\" can capture claims caused entirely by the provider's own defective software, because the customer's use is the proximate occasion of the claim. \"Arising out of or relating to\" is doing enormous work in that sentence and should be flagged.\nCheck whether the indemnity is carved out of the liability cap (see uncapped_liability). An indemnity that survives the cap is where the real money is.\nA mutual, narrowly-scoped IP indemnity from the vendor is normal and is NOT this finding.",
+        "recommended_redline": "Ask for mutual indemnities, narrowed to third-party claims caused by the indemnifying party's own breach, negligence, or IP infringement \u2014 and ask for them to sit inside the liability cap."
+      }
+    },
+    {
+      "at": 7.11,
+      "kind": "tool_call",
+      "name": "get_rule_detail",
+      "input": {
+        "rule_id": "uncapped_liability"
+      }
+    },
+    {
+      "at": 7.11,
+      "kind": "tool_result",
+      "name": "get_rule_detail",
+      "output": {
+        "rule_id": "uncapped_liability",
+        "title": "No cap on your liability",
+        "default_severity": "critical",
+        "exposure": "There is no ceiling on what a single mistake can cost you \u2014 one bad incident could exceed the entire value of the contract, or the value of your company.",
+        "detection_guidance": "Look for the limitation-of-liability clause and establish whether one exists at all. Its absence is itself the finding, and is easy to miss precisely because there is nothing to read.\nWhen a cap IS present, the danger usually lives in the carve-outs, not the cap: a clause capping liability at fees paid, followed by \"except for breaches of confidentiality, data protection, IP infringement, and indemnity obligations\", may leave every realistic large loss uncapped while looking protective. Read the exclusions before deciding the cap is adequate.\nCross-reference the indemnity clause. Indemnities are frequently carved out of the cap in a separate section, and an uncapped indemnity is an uncapped liability wearing a different hat. This interaction between distant clauses is exactly why the agent reads the whole document.",
+        "recommended_redline": "Ask for an aggregate cap on all liability, expressed as a multiple of fees paid in the preceding twelve months. Confirm which carve-outs sit outside it and push to narrow them \u2014 particularly any carve-out for indemnities."
+      }
+    },
+    {
+      "at": 73.91,
+      "kind": "tool_call",
+      "name": "record_key_terms",
+      "input": {
+        "parties": [
+          "NORTHWIND ANALYTICS INC.",
+          "Customer identified in the applicable Order Form"
+        ],
+        "effective_date": "3 March 2026",
+        "initial_term": "Initial Term specified in the Order Form",
+        "renewal": "Automatically renews for successive periods of twenty-four (24) months unless Customer's written non-renewal notice is received at least one hundred and twenty (120) days before the end of the then-current Term.",
+        "notice_period": "Customer non-renewal notice must be received at least one hundred and twenty (120) days before term-end; Provider may terminate for convenience on thirty (30) days' written notice; Customer may terminate only for an uncured material breach after ninety (90) days.",
+        "payment_terms": "Invoiced annually in advance; due within sixty (60) days; all Fees non-refundable; 2.5% monthly compounded late interest or the maximum permitted rate, whichever is greater; invoice disputes due within ten (10) days.",
+        "liability_cap": "Provider: fees paid in the three (3) months before the event; Customer: total fees payable over the full applicable Order Form term. Section 14 indemnification is outside both caps, and only Customer gives an indemnity.",
+        "governing_law": "Laws of the State of Delaware; binding AAA arbitration in Wilmington, Delaware.",
+        "termination_rights": "Provider may terminate at any time for any or no reason on thirty (30) days' notice. Customer may terminate only for Provider's material breach remaining uncured for ninety (90) days after detailed written notice."
+      }
+    },
+    {
+      "at": 73.91,
+      "kind": "tool_result",
+      "name": "record_key_terms",
+      "output": {
+        "recorded": true
+      }
+    },
+    {
+      "at": 73.91,
+      "kind": "tool_call",
+      "name": "record_finding",
+      "input": {
+        "rule_id": "asymmetric_liability_cap",
+        "severity": "high",
+        "title": "Your cap is the full term; theirs is only three months",
+        "exposure": "Provider's ordinary liability is capped at three months of fees, while Customer's is capped at all fees payable over the full term. The protection is weaker for Customer even before the uncapped, one-way indemnity is considered.",
+        "recommendation": "Ask for one mutual cap based on at least 12 months of fees, with the same amount and the same carve-outs applying to both parties.",
+        "quoted_text": "9.1 EXCEPT AS PROVIDED IN SECTION 9.3, THE TOTAL AGGREGATE LIABILITY OF\nPROVIDER ARISING OUT OF OR RELATING TO THIS AGREEMENT SHALL NOT EXCEED THE\nFEES PAID BY CUSTOMER IN THE THREE (3) MONTHS IMMEDIATELY PRECEDING THE\nEVENT GIVING RISE TO THE CLAIM.\n9.2 THE TOTAL AGGREGATE LIABILITY OF CUSTOMER ARISING OUT OF OR RELATING TO\nTHIS AGREEMENT SHALL NOT EXCEED THE TOTAL FEES PAYABLE UNDER THE\nAPPLICABLE ORDER FORM OVER THE FULL TERM.",
+        "confidence": "high"
+      }
+    },
+    {
+      "at": 73.91,
+      "kind": "tool_result",
+      "name": "record_finding",
+      "output": {
+        "verified": true,
+        "page": 3
+      }
+    },
+    {
+      "at": 73.91,
+      "kind": "tool_call",
+      "name": "record_finding",
+      "input": {
+        "rule_id": "missing_sla_or_remedy",
+        "severity": "medium",
+        "title": "An SLA miss buys only a 5% credit claimed in 10 days",
+        "exposure": "If Provider misses its 99.5% availability promise or any other performance commitment, Customer's only remedy is a 5% monthly credit. Customer loses even that limited remedy unless it identifies the failure and submits a written request within ten days after month-end.",
+        "recommendation": "Ask for tiered credits that increase with outage severity, at least 30 days to claim them, and a termination and refund right for repeated or prolonged failures; credits should not be the sole remedy for sustained outages.",
+        "quoted_text": "10.1 If Provider fails to meet the availability commitment in Section 2.2 in any calendar month, Customer may\nrequest a service credit equal to five percent (5%) of the monthly Fees for that month.\n10.2 To receive a service credit, Customer must submit a written request within ten (10) days of the end of the\naffected month.\n10.3 Service credits are Customer's sole and exclusive remedy for any failure by Provider to meet the availability\ncommitment or any other performance commitment under this Agreement.",
+        "confidence": "high"
+      }
+    },
+    {
+      "at": 73.91,
+      "kind": "tool_result",
+      "name": "record_finding",
+      "output": {
+        "verified": true,
+        "page": 3
+      }
+    },
+    {
+      "at": 73.91,
+      "kind": "tool_call",
+      "name": "record_finding",
+      "input": {
+        "rule_id": "one_sided_indemnity",
+        "severity": "critical",
+        "title": "You alone cover sweeping claims tied to service use",
+        "exposure": "Customer must fund Provider's defence and losses for any claim relating to Customer Data, use of the Services, or breach, but Provider gives no indemnity in return. The broad phrase \u201carising out of or relating to\u201d can pull in claims involving Provider's own defective service, and this obligation is uncapped.",
+        "recommendation": "Ask for mutual indemnities limited to third-party claims caused by each party's breach, negligence, misconduct, or IP infringement; exclude claims caused by Provider and put indemnities inside the liability cap.",
+        "quoted_text": "14.1 Customer shall defend, indemnify, and hold harmless Provider, its affiliates, and their respective officers,\ndirectors, employees, and agents from and against any and all claims, damages, losses, liabilities, costs, and\nexpenses (including reasonable attorneys' fees) arising out of or relating to (a) Customer Data, (b) Customer's use\nof the Services, (c) Customer's breach of this Agreement, or (d) any claim that Customer Data infringes or\nmisappropriates the rights of any third party.",
+        "confidence": "high"
+      }
+    },
+    {
+      "at": 73.91,
+      "kind": "tool_result",
+      "name": "record_finding",
+      "output": {
+        "verified": true,
+        "page": 4
+      }
+    },
+    {
+      "at": 73.91,
+      "kind": "tool_call",
+      "name": "record_finding",
+      "input": {
+        "rule_id": "uncapped_liability",
+        "severity": "critical",
+        "title": "Your broad indemnity has no liability ceiling",
+        "exposure": "The apparent Customer cap does not cover the Section 14 indemnity. Because that indemnity reaches any and all claims, damages, liabilities, costs, and legal fees relating to Customer Data, service use, or breach, one dispute could cost far more than the contract value.",
+        "recommendation": "Ask for Section 14 obligations to remain inside a mutual aggregate cap, ideally tied to fees paid in the preceding 12 months, with only narrow and expressly agreed exceptions.",
+        "quoted_text": "14.2 The indemnification obligations set out in Section 14.1 are not subject to the limitations of liability set out in\nSection 9.",
+        "confidence": "high"
+      }
+    },
+    {
+      "at": 73.91,
+      "kind": "tool_result",
+      "name": "record_finding",
+      "output": {
+        "verified": true,
+        "page": 4
+      }
+    },
+    {
+      "at": 81.88,
+      "kind": "tool_call",
+      "name": "finalize",
+      "input": {
+        "summary": "The worst term leaves you with unlimited exposure: you must pay for a sweeping range of claims tied to your data or use of the service, while Northwind gives you no matching protection. For ordinary claims, Northwind's risk stops at three months of fees but yours can run to the full contract value, and if the service fails, your only remedy is a 5% credit that you must claim within 10 days."
+      }
+    },
+    {
+      "at": 81.88,
+      "kind": "tool_result",
+      "name": "finalize",
+      "output": {
+        "complete": true
+      }
+    },
+    {
+      "at": 81.88,
+      "kind": "usage",
+      "input_tokens": 21298,
+      "cached_input_tokens": 12669,
+      "output_tokens": 1813
+    },
+    {
+      "at": 86.56,
+      "kind": "tool_call",
+      "name": "get_rule_detail",
+      "input": {
+        "rule_id": "payment_terms"
+      }
+    },
+    {
+      "at": 86.56,
+      "kind": "tool_result",
+      "name": "get_rule_detail",
+      "output": {
+        "rule_id": "payment_terms",
+        "title": "Payment terms are stacked against you",
+        "default_severity": "medium",
+        "exposure": "You must pay long before you are paid, or face punitive charges for a late invoice, or have no window in which to dispute a bill that is simply wrong.",
+        "detection_guidance": "Three distinct problems, any of which triggers this rule:\n1. Long payment windows running against the reader (Net-60, Net-90) \u2014 particularly damaging\n   where the reader is the party providing services and awaiting payment.\n2. Punitive late fees or interest. Note the rate: 1.5% per month is standard; anything\n   materially above that, or compounding, is a finding.\n3. No dispute window, or a very short one. If invoices are \"deemed accepted\" after 10 days,\n   a billing error becomes unchallengeable almost immediately.\n\nAlso flag automatic payment authorisation combined with a unilateral price change right \u2014 the combination means they can charge a new amount to a stored card without a conversation.",
+        "recommended_redline": "Ask for Net-30, interest capped at a standard commercial rate, and a dispute window of at least 30 days during which disputed amounts are not deemed accepted and do not accrue interest."
+      }
+    },
+    {
+      "at": 86.56,
+      "kind": "tool_call",
+      "name": "get_rule_detail",
+      "input": {
+        "rule_id": "uncapped_price_escalation"
+      }
+    },
+    {
+      "at": 86.56,
+      "kind": "tool_result",
+      "name": "get_rule_detail",
+      "output": {
+        "rule_id": "uncapped_price_escalation",
+        "title": "They can raise the price at renewal without limit",
+        "default_severity": "high",
+        "exposure": "Nothing constrains what they may charge at renewal \u2014 and once your business depends on the service, \"take it or leave it\" is not really a choice.",
+        "detection_guidance": "Look for renewal pricing language. The absence of any constraint is the finding: silence on renewal pricing means the price is whatever they say it is.\nLook for weak constraints dressed as protection \u2014 \"Provider may increase fees at renewal upon 30 days' notice\" caps nothing at all, it merely tells you when.\nSeverity is highest where this combines with auto_renewal (the price rises AND you are already locked in) and with switching costs \u2014 data migration, integration work, exclusivity. Check for that interaction explicitly.",
+        "recommended_redline": "Ask for renewal increases to be capped \u2014 a fixed percentage, or CPI plus a small margin \u2014 and for advance notice long enough to actually change vendors."
+      }
+    },
+    {
+      "at": 86.56,
+      "kind": "tool_call",
+      "name": "get_rule_detail",
+      "input": {
+        "rule_id": "unfavorable_forum"
+      }
+    },
+    {
+      "at": 86.56,
+      "kind": "tool_result",
+      "name": "get_rule_detail",
+      "output": {
+        "rule_id": "unfavorable_forum",
+        "title": "Disputes must be fought somewhere expensive and far away",
+        "default_severity": "medium",
+        "exposure": "Any dispute must be litigated in their home jurisdiction \u2014 which can cost more to travel to and argue in than the amount you are arguing about, making small claims practically unwinnable.",
+        "detection_guidance": "Find the governing law and the venue/forum clause; they can differ, and both matter.\nWeigh the forum against the reader's location and the size of the contract. A forum clause naming a distant jurisdiction is a much bigger finding on a $20k contract than on a $2M one, because the cost of enforcement can exceed the value in dispute.\nLook for mandatory arbitration, and read its terms: who pays the arbitrator, where it is seated, and whether class actions or jury trials are waived. Mandatory arbitration in a distant seat, with fees split evenly, is a de facto bar to small claims.\nDo NOT opine on whether a given clause is enforceable in a given jurisdiction \u2014 SPEC.md \u00a74.6 puts that out of bounds. State the exposure, not the legal conclusion.",
+        "recommended_redline": "Ask for a neutral venue, or for the forum to be the defendant's home jurisdiction (which discourages opportunistic claims in both directions)."
+      }
+    },
+    {
+      "at": 86.56,
+      "kind": "tool_call",
+      "name": "get_rule_detail",
+      "input": {
+        "rule_id": "unilateral_amendment"
+      }
+    },
+    {
+      "at": 86.56,
+      "kind": "tool_result",
+      "name": "get_rule_detail",
+      "output": {
+        "rule_id": "unilateral_amendment",
+        "title": "They can change the terms without asking you",
+        "default_severity": "high",
+        "exposure": "They can rewrite the deal \u2014 including the price and what you are actually buying \u2014 by posting a new page on their website, and your continued use counts as agreement.",
+        "detection_guidance": "Look for language permitting one party to modify the terms, the policies, the service, or the fees at its discretion, with notice by posting rather than agreement.\nCritically, follow the INCORPORATION BY REFERENCE. A contract that incorporates an \"Acceptable Use Policy\", \"Service Description\", or \"Fee Schedule\" available at a URL, and separately allows that document to change at any time, has a unilateral amendment right even if the main agreement never uses the word \"amend\". This is a two-clause interaction and it is the most commonly missed instance of this rule.\nNote whether continued use is deemed acceptance. That converts silence into consent.",
+        "recommended_redline": "Ask for material changes \u2014 to price, to scope, to any incorporated policy \u2014 to require written agreement, or at minimum to trigger a right to terminate without penalty within 30 days."
+      }
+    },
+    {
+      "at": 86.78,
+      "kind": "tool_call",
+      "name": "get_rule_detail",
+      "input": {
+        "rule_id": "confidentiality_defect"
+      }
+    },
+    {
+      "at": 86.78,
+      "kind": "tool_result",
+      "name": "get_rule_detail",
+      "output": {
+        "rule_id": "confidentiality_defect",
+        "title": "Confidentiality protection is defective or one-way",
+        "default_severity": "medium",
+        "exposure": "Your confidential information is less protected than theirs, or protected for too short a time to matter, or the obligations bind you forever in a way you cannot realistically comply with.",
+        "detection_guidance": "Three distinct defects, any of which triggers this rule:\n1. ONE-WAY protection where the exchange is mutual \u2014 you disclose and they do not, but only\n   their information is protected.\n2. A duration that is too SHORT for the sensitivity involved (a two-year term on trade secrets\n   effectively publishes them at the end of it), or PERPETUAL in a way that is unworkable \u2014\n   perpetual obligations on all information, with no carve-out for information that becomes\n   public, is a compliance impossibility rather than a protection.\n3. Missing standard EXCEPTIONS \u2014 independently developed, already known, publicly available,\n   required by law. Their absence means routine conduct can become a breach.\n\nA mutual NDA with a 3-5 year term and standard exceptions is normal and is NOT a finding.",
+        "recommended_redline": "Ask for mutual obligations, a term appropriate to the sensitivity (perpetual for trade secrets, 3-5 years otherwise), and the four standard exceptions."
+      }
+    },
+    {
+      "at": 86.78,
+      "kind": "tool_call",
+      "name": "get_rule_detail",
+      "input": {
+        "rule_id": "missing_data_protection"
+      }
+    },
+    {
+      "at": 86.78,
+      "kind": "tool_result",
+      "name": "get_rule_detail",
+      "output": {
+        "rule_id": "missing_data_protection",
+        "title": "No real protection for the data you hand over",
+        "default_severity": "high",
+        "exposure": "There is no data processing agreement, no duty to tell you about a breach, and no limit on what they may do with your customers' personal data \u2014 and it is your name on the breach notice.",
+        "detection_guidance": "Check for the presence of: a data processing agreement or equivalent terms; a breach NOTIFICATION obligation with a stated timeframe; limits on processing purposes; restrictions on sub-processors; and deletion or return of data on termination.\nThe absence of any of these is a finding, and the absence of breach notification is the most serious \u2014 without it you may not learn of a breach in time to meet your own regulatory deadlines, which are typically 72 hours.\nLook for language permitting the provider to use customer data to \"improve the Services\" or to train models. That is a broad right, frequently drafted in a way that survives termination, and it is often the only place where data use is described at all.\nWhere the contract covers personal data and says nothing about it, say so plainly.",
+        "recommended_redline": "Ask for a data processing agreement, breach notification within 72 hours, an express prohibition on using your data to train models or for any purpose beyond providing the service, and deletion on termination with certification."
+      }
+    },
+    {
+      "at": 86.78,
+      "kind": "tool_call",
+      "name": "get_rule_detail",
+      "input": {
+        "rule_id": "non_compete"
+      }
+    },
+    {
+      "at": 86.78,
+      "kind": "tool_result",
+      "name": "get_rule_detail",
+      "output": {
+        "rule_id": "non_compete",
+        "title": "Restricts who you may do business with",
+        "default_severity": "high",
+        "exposure": "You are barred from working with certain customers, in certain markets, or in certain categories \u2014 sometimes for years after this contract has already ended.",
+        "detection_guidance": "Look for non-compete, non-solicitation, and exclusivity provisions. Assess each on three axes, because a restriction is only as dangerous as its broadest dimension: SCOPE (what activity), GEOGRAPHY (where), and DURATION (for how long, including after termination).\nA non-solicitation of the counterparty's employees is normal and usually not a finding. A non-solicitation of the counterparty's CUSTOMERS, or a bar on serving an entire industry, is.\nPay attention to survival: a restriction that outlives the contract is materially worse than one that does not, and the survival clause is usually in a different section entirely.\nDo not opine on enforceability in any jurisdiction. Describe the restriction and its exposure.",
+        "recommended_redline": "Ask to narrow the restriction to the specific accounts actually served under this contract, to remove any post-termination tail beyond 12 months, and to strike any bar on serving an entire market or category."
+      }
+    },
+    {
+      "at": 86.78,
+      "kind": "tool_call",
+      "name": "get_rule_detail",
+      "input": {
+        "rule_id": "overbroad_ip_assignment"
+      }
+    },
+    {
+      "at": 86.78,
+      "kind": "tool_result",
+      "name": "get_rule_detail",
+      "output": {
+        "rule_id": "overbroad_ip_assignment",
+        "title": "You hand over more IP than you meant to",
+        "default_severity": "critical",
+        "exposure": "Work product, improvements, or even the tools and know-how you brought with you transfer to them \u2014 you could lose the right to use your own prior work.",
+        "detection_guidance": "Establish three things separately, because the danger is usually in the gap between them: what is ASSIGNED, what is LICENSED, and what is retained as background IP.\nThe finding is strongest where the assignment language sweeps in more than the deliverables: \"all work product, and all improvements, derivatives, and know-how arising therefrom\" can capture the general-purpose tooling a contractor uses across every client.\nLook specifically for the ABSENCE of a background-IP carve-out. Its absence is the finding, and like all absences it is easy to skim past.\nAlso check for feedback clauses assigning any suggestions the customer makes, and for licences that are perpetual, irrevocable, and sublicensable \u2014 which is an assignment in all but name.",
+        "recommended_redline": "Ask for the assignment to be limited to the specific deliverables, with an explicit carve-out retaining ownership of pre-existing and general-purpose IP, licensed to them only as needed to use the deliverables."
+      }
+    },
+    {
+      "at": 86.83,
+      "kind": "tool_call",
+      "name": "get_rule_detail",
+      "input": {
+        "rule_id": "assignment_change_of_control"
+      }
+    },
+    {
+      "at": 86.83,
+      "kind": "tool_result",
+      "name": "get_rule_detail",
+      "output": {
+        "rule_id": "assignment_change_of_control",
+        "title": "They can be acquired and the contract goes with them",
+        "default_severity": "medium",
+        "exposure": "The counterparty can transfer this contract to whoever buys them \u2014 potentially your direct competitor \u2014 and you have no say and no exit.",
+        "detection_guidance": "Find the assignment clause and establish whether it is mutual. The common pattern is that the customer may not assign without consent, while the provider may freely assign \"in connection with a merger, acquisition, or sale of all or substantially all assets\".\nThe finding is stronger when the contract involves confidential information, exclusive commitments, or a competitor-sensitive relationship, because the identity of the counterparty is then material to the deal in a way it otherwise might not be.\nCheck whether a change of control gives the other side a termination right but not you.",
+        "recommended_redline": "Ask for the assignment right to be mutual, or for a right to terminate without penalty if the counterparty is acquired by a competitor."
+      }
+    },
+    {
+      "at": 86.84,
+      "kind": "tool_call",
+      "name": "get_rule_detail",
+      "input": {
+        "rule_id": "auto_renewal"
+      }
+    },
+    {
+      "at": 86.84,
+      "kind": "tool_result",
+      "name": "get_rule_detail",
+      "output": {
+        "rule_id": "auto_renewal",
+        "title": "Renews automatically, and the exit window is easy to miss",
+        "default_severity": "high",
+        "exposure": "The contract renews itself, and by the time anyone thinks to look, the window to stop it has already closed \u2014 committing you to another full term you did not choose.",
+        "detection_guidance": "Find the renewal mechanics, then find the notice period \u2014 they are very often in DIFFERENT sections, and the danger only becomes visible when you put them together. A twelve-month auto-renewal is unremarkable; a twelve-month auto-renewal with a ninety-day notice window is a trap, because the decision must be made nine months into a twelve-month term.\nNote who may decline renewal. Sometimes only one party can.\nSeverity rises when the notice period is long relative to the term, when notice must be given by a specific method (registered post, a named contact), or when the renewal is for a term LONGER than the initial one.",
+        "recommended_redline": "Ask for renewal to require affirmative written consent. Failing that, ask to shorten the notice period to 30 days, and to receive a renewal reminder at least 30 days before the window closes."
+      }
+    },
+    {
+      "at": 86.84,
+      "kind": "tool_call",
+      "name": "get_rule_detail",
+      "input": {
+        "rule_id": "unilateral_termination"
+      }
+    },
+    {
+      "at": 86.84,
+      "kind": "tool_result",
+      "name": "get_rule_detail",
+      "output": {
+        "rule_id": "unilateral_termination",
+        "title": "They can walk away, you cannot",
+        "default_severity": "high",
+        "exposure": "They can end the contract on short notice or for no reason at all, while you are locked in for the full term \u2014 so you carry all of the commitment and none of the flexibility.",
+        "detection_guidance": "Compare the termination rights of each party side by side. Look specifically for termination \"for convenience\" available to only one party, or for materially different notice periods.\nCheck what happens to money on termination: a right to terminate for convenience is far worse when prepaid fees are non-refundable, and the two facts are usually in different sections.\nAlso look for termination triggers that are effectively one-sided in practice even when symmetric on paper \u2014 for example a right to terminate on the other party's \"insolvency or material adverse change\", where one party is a startup and the other is not.",
+        "recommended_redline": "Ask for mutual termination rights on equal notice. If they retain termination for convenience, ask for a pro-rata refund of prepaid fees and a transition period to migrate off the service."
+      }
+    },
+    {
+      "at": 113.47,
+      "kind": "tool_call",
+      "name": "record_key_terms",
+      "input": {
+        "parties": [
+          "NORTHWIND ANALYTICS INC.",
+          "the customer identified in the applicable Order Form"
+        ],
+        "effective_date": "3 March 2026",
+        "initial_term": null,
+        "renewal": "Automatically renews for successive twenty-four (24) month Renewal Terms unless Customer's compliant written notice is received at least one hundred and twenty (120) days before the end of the then-current Term.",
+        "notice_period": "Customer must give non-renewal notice at least one hundred and twenty (120) days before term end by registered post or internationally recognised courier; email is ineffective. Provider may terminate for convenience on thirty (30) days' written notice; Customer may terminate only for an uncured material breach after ninety (90) days' notice.",
+        "payment_terms": "Invoiced annually in advance; due within sixty (60) days; all Fees are non-refundable; invoice disputes must be raised within ten (10) days; late amounts bear 2.5% monthly compounded interest or the maximum permitted rate, whichever is greater; Provider may charge the payment method on file for renewal Fees.",
+        "liability_cap": "Provider: Fees paid in the three (3) months before the event. Customer: total Fees payable over the full Order Form term. Section 14 indemnification is outside both caps; only Customer gives an indemnity, so that exposure is uncapped.",
+        "governing_law": "State of Delaware; binding AAA arbitration in Wilmington, Delaware, with each party paying half of arbitrator and administrative costs.",
+        "termination_rights": "Provider may terminate at any time for any or no reason on thirty (30) days' notice and may suspend immediately in its sole discretion for perceived risk. Customer may terminate only for Provider's material breach remaining uncured for ninety (90) days after detailed written notice. Current-term Fees remain non-refundable and immediately due on any termination or expiry."
+      }
+    },
+    {
+      "at": 113.47,
+      "kind": "tool_result",
+      "name": "record_key_terms",
+      "output": {
+        "recorded": true
+      }
+    },
+    {
+      "at": 132.86,
+      "kind": "tool_call",
+      "name": "record_key_terms",
+      "input": {
+        "parties": [
+          "NORTHWIND ANALYTICS INC.",
+          "the customer identified in the applicable Order Form"
+        ],
+        "effective_date": "3 March 2026",
+        "initial_term": "Specified in the Order Form",
+        "renewal": "Automatic successive twenty-four (24) month Renewal Terms unless Customer gives non-renewal notice at least one hundred and twenty (120) days before the current Term ends",
+        "notice_period": "Customer non-renewal notice must be received at least 120 days before Term-end by registered post or internationally recognised courier; Provider may terminate for any or no reason on 30 days' written notice; Customer may terminate only for Provider's material breach after a 90-day cure period",
+        "payment_terms": "Invoiced annually in advance; due within sixty (60) days; all Fees non-refundable; late amounts accrue 2.5% monthly compounded or the maximum permitted rate, whichever is greater; invoice disputes due within 10 days",
+        "liability_cap": "Provider: Fees paid in the 3 months before the claim; Customer: total Fees payable over the full Order Form term. Section 14 Customer indemnity is outside both caps and uncapped.",
+        "governing_law": "State of Delaware; binding AAA arbitration in Wilmington, Delaware",
+        "termination_rights": "Provider may terminate at any time for any reason or no reason on 30 days' written notice. Customer may terminate only for Provider's material breach uncured for 90 days; current-Term Fees remain non-refundable and immediately due."
+      }
+    },
+    {
+      "at": 132.86,
+      "kind": "tool_result",
+      "name": "record_key_terms",
+      "output": {
+        "recorded": true
+      }
+    },
+    {
+      "at": 132.86,
+      "kind": "tool_call",
+      "name": "record_finding",
+      "input": {
+        "rule_id": "assignment_change_of_control",
+        "severity": "high",
+        "title": "Provider can transfer the deal to an acquirer or competitor",
+        "exposure": "Provider can move the agreement to an acquirer without Customer's consent, while Customer cannot assign even with a sale unless Provider agrees. Because Customer is also barred from using similar analytics providers for 24 months after termination, the contract could follow Provider to an unwanted owner without giving Customer an exit.",
+        "recommendation": "Ask for assignment restrictions to be mutual and for Customer to be allowed to assign in a merger, reorganisation, or sale of substantially all assets. Also ask for a right to terminate without penalty and receive a pro-rata refund if Provider is acquired by a competitor.",
+        "quoted_text": "13.1 Customer may not assign or transfer this Agreement, in whole or in part, without Provider's prior written\nconsent, which may be withheld in Provider's sole discretion.\n13.2 Provider may assign this Agreement without Customer's consent to any affiliate or in connection with any\nmerger, acquisition, reorganisation, or sale of all or substantially all of its assets.",
+        "confidence": "high"
+      }
+    },
+    {
+      "at": 132.86,
+      "kind": "tool_result",
+      "name": "record_finding",
+      "output": {
+        "verified": true,
+        "page": 4
+      }
+    },
+    {
+      "at": 132.86,
+      "kind": "tool_call",
+      "name": "record_finding",
+      "input": {
+        "rule_id": "auto_renewal",
+        "severity": "high",
+        "title": "Miss the 120-day window and renew for another 24 months",
+        "exposure": "The agreement automatically locks Customer into another 24-month term unless non-renewal reaches Provider at least 120 days before expiry. Notice must be sent by registered post or recognised courier, email is ineffective, and Provider discloses renewal pricing only 30 days before renewal\u201490 days after Customer's cancellation deadline.",
+        "recommendation": "Ask for renewal only by mutual written agreement. If Provider refuses, ask for 12-month renewals, a 30-day non-renewal deadline, email notice, and a pricing notice before the cancellation window closes.",
+        "quoted_text": "3.2 Upon expiry of the Initial Term, this Agreement shall renew automatically for successive periods of\ntwenty-four (24) months (each a \"Renewal Term\"), unless Customer delivers written notice of non-renewal in\naccordance with Section 17.4 within the notice window specified in Section 17.5.",
+        "confidence": "high"
+      }
+    },
+    {
+      "at": 132.86,
+      "kind": "tool_result",
+      "name": "record_finding",
+      "output": {
+        "verified": true,
+        "page": 1
+      }
+    },
+    {
+      "at": 132.86,
+      "kind": "tool_call",
+      "name": "record_finding",
+      "input": {
+        "rule_id": "unilateral_termination",
+        "severity": "critical",
+        "title": "Provider can exit in 30 days while Customer stays liable",
+        "exposure": "Provider can end the deal at any time for no reason on 30 days' notice, but Customer can leave only after a material breach remains uncured for 90 days. Even when Provider walks away, all fees for the current term remain non-refundable and immediately due, leaving Customer to fund replacement service while paying for service it no longer receives.",
+        "recommendation": "Ask for mutual termination-for-convenience rights on equal notice. At minimum, require a pro-rata refund of prepaid fees, cancellation of unearned future fees, Customer Data export assistance, and a reasonable transition period whenever Provider terminates for convenience.",
+        "quoted_text": "12.1 Provider may terminate this Agreement at any time, for any reason or no reason, upon thirty (30) days'\nwritten notice to Customer.\n12.2 Customer may terminate this Agreement only for Provider's material breach that remains uncured ninety (90)\ndays after Customer's written notice describing the breach in reasonable detail.\n12.3 Upon any termination or expiry, all Fees paid or payable for the then-current Term shall be non-refundable\nand shall become immediately due.",
+        "confidence": "high"
+      }
+    },
+    {
+      "at": 132.86,
+      "kind": "tool_result",
+      "name": "record_finding",
+      "output": {
+        "verified": true,
+        "page": 3
+      }
+    },
+    {
+      "at": 139.22,
+      "kind": "tool_call",
+      "name": "finalize",
+      "input": {
+        "summary": "Provider can cancel on 30 days\u2019 notice for no reason while keeping or demanding all fees for the current term, but you can leave only after an uncured breach and a 90-day wait. If you miss a courier-only deadline 120 days before expiry, you are locked into another 24 months at pricing you will not learn until later; Provider can also transfer the contract to an acquirer without your consent or an exit right."
+      }
+    },
+    {
+      "at": 139.22,
+      "kind": "tool_result",
+      "name": "finalize",
+      "output": {
+        "complete": true
+      }
+    },
+    {
+      "at": 139.22,
+      "kind": "usage",
+      "input_tokens": 20246,
+      "cached_input_tokens": 12251,
+      "output_tokens": 1592
+    },
+    {
+      "at": 156.47,
+      "kind": "tool_call",
+      "name": "record_finding",
+      "input": {
+        "rule_id": "confidentiality_defect",
+        "severity": "high",
+        "title": "Only Provider's confidential information is protected",
+        "exposure": "The confidentiality definition covers only information Provider discloses, so Customer's sensitive business, technical, and end-user information receives no contractual confidentiality protection. The clause also omits the standard public-domain, prior-knowledge, independent-development, and legally required disclosure exceptions, while imposing perpetual duties on Customer.",
+        "recommendation": "Ask for mutual confidentiality obligations, standard exceptions for public, previously known, independently developed, third-party received, and legally compelled information, and a 3\u20135 year term except for trade secrets, which should remain protected while legally secret.",
+        "quoted_text": "\"Confidential Information\" means information disclosed by Provider to Customer that is designated as confidential or that reasonably should be understood to be confidential given the nature of the information.",
+        "confidence": "high"
+      }
+    },
+    {
+      "at": 156.47,
+      "kind": "tool_result",
+      "name": "record_finding",
+      "output": {
+        "verified": true,
+        "page": 2
+      }
+    },
+    {
+      "at": 156.47,
+      "kind": "tool_call",
+      "name": "record_finding",
+      "input": {
+        "rule_id": "missing_data_protection",
+        "severity": "high",
+        "title": "Personal data lacks a DPA and can train Provider's models",
+        "exposure": "Customer Data expressly includes end-user personal data, but the agreement has no DPA, breach-notification deadline, subprocessor controls, processing instructions, or guaranteed return or deletion. Provider can also use de-identified Customer Data to train machine-learning models and keep that right forever, leaving Customer with weak control over data for which it may remain accountable.",
+        "recommendation": "Ask for a signed DPA covering processing instructions, security standards, subprocessors, assistance with data-subject requests, breach notice within 72 hours, and prompt deletion or return with certification. Also prohibit using Customer Data for model training or products other than the contracted Services, even if aggregated or de-identified.",
+        "quoted_text": "Provider may use Customer Data, in aggregated and de-identified form, to operate, analyse, improve, and develop the Services and Provider's other products, including for the training of machine learning models. This right shall survive termination of this Agreement in perpetuity.",
+        "confidence": "high"
+      }
+    },
+    {
+      "at": 156.47,
+      "kind": "tool_result",
+      "name": "record_finding",
+      "output": {
+        "verified": true,
+        "page": 2
+      }
+    },
+    {
+      "at": 156.47,
+      "kind": "tool_call",
+      "name": "record_finding",
+      "input": {
+        "rule_id": "non_compete",
+        "severity": "high",
+        "title": "Customer cannot use similar analytics providers for two years",
+        "exposure": "Customer is barred worldwide from engaging any third party for substantially similar analytics services involving the covered data sets during the agreement and for 24 months after it ends. This can lock Customer into Provider, block migration or dual-sourcing, and interfere with continued use of its own data after termination.",
+        "recommendation": "Ask to delete Section 15.1. If Provider refuses, limit it to misuse of Provider's confidential information, with no restriction on hiring competing vendors, migrating the covered data sets, or operating after termination.",
+        "quoted_text": "During the Term and for a period of twenty-four (24) months following termination, Customer shall not, directly or indirectly, engage any third party to provide analytics services substantially similar to the Services in respect of the data sets processed under this Agreement.",
+        "confidence": "high"
+      }
+    },
+    {
+      "at": 156.47,
+      "kind": "tool_result",
+      "name": "record_finding",
+      "output": {
+        "verified": true,
+        "page": 4
+      }
+    },
+    {
+      "at": 156.47,
+      "kind": "tool_call",
+      "name": "record_finding",
+      "input": {
+        "rule_id": "overbroad_ip_assignment",
+        "severity": "medium",
+        "title": "Provider owns every suggestion without payment or attribution",
+        "exposure": "Any suggestion, recommendation, or enhancement request Customer provides becomes Provider's property outright, with unrestricted use and no attribution or compensation. Although Customer keeps ownership of Customer Data, the feedback assignment could capture Customer-originated product concepts or workflow innovations rather than merely granting Provider permission to use routine comments.",
+        "recommendation": "Ask to replace the assignment with a non-exclusive, royalty-free licence limited to feedback voluntarily provided about the Services, excluding Customer Data, confidential information, pre-existing IP, and Customer's general business methods or product concepts.",
+        "quoted_text": "Customer hereby assigns to Provider all right, title, and interest in and to any suggestions, enhancement requests, recommendations, or other feedback provided by Customer relating to the Services, and acknowledges that Provider may use such feedback for any purpose without restriction, attribution, or compensation.",
+        "confidence": "high"
+      }
+    },
+    {
+      "at": 156.47,
+      "kind": "tool_result",
+      "name": "record_finding",
+      "output": {
+        "verified": true,
+        "page": 2
+      }
+    },
+    {
+      "at": 157.24,
+      "kind": "tool_call",
+      "name": "record_key_terms",
+      "input": {
+        "parties": [
+          "NORTHWIND ANALYTICS INC.",
+          "the customer identified in the applicable Order Form"
+        ],
+        "effective_date": "3 March 2026",
+        "initial_term": "The Initial Term specified in the Order Form",
+        "renewal": "Automatic successive twenty-four (24) month Renewal Terms unless Customer's written non-renewal notice is received at least one hundred and twenty (120) days before the current Term ends",
+        "notice_period": "Customer non-renewal notice must be received at least one hundred and twenty (120) days before the current Term ends and must be sent by registered post or internationally recognised courier; Provider may terminate on thirty (30) days' written notice",
+        "payment_terms": "Invoiced annually in advance; due within sixty (60) days; all Fees non-refundable; 2.5% monthly interest compounded monthly or the maximum permitted rate, whichever is greater; invoices deemed accepted after 10 days; automatic charge authority",
+        "liability_cap": "Provider: Fees paid in the three (3) months before the claim event. Customer: total Fees payable over the full applicable Order Form term. Section 14 indemnification is outside the caps, leaving Customer's indemnity uncapped.",
+        "governing_law": "Delaware law; binding AAA arbitration in Wilmington, Delaware, with arbitrator and administrative fees split equally",
+        "termination_rights": "Provider may terminate at any time for any reason or no reason on thirty (30) days' written notice. Customer may terminate only for Provider's material breach left uncured for ninety (90) days; current-Term Fees remain non-refundable and immediately due."
+      }
+    },
+    {
+      "at": 157.24,
+      "kind": "tool_result",
+      "name": "record_key_terms",
+      "output": {
+        "recorded": true
+      }
+    },
+    {
+      "at": 157.24,
+      "kind": "tool_call",
+      "name": "record_finding",
+      "input": {
+        "rule_id": "payment_terms",
+        "severity": "high",
+        "title": "2.5% monthly compound interest and only 10 days to dispute",
+        "exposure": "A late amount accrues 2.5% interest every month, compounded, while an invoice becomes accepted if Customer does not dispute it within 10 days. Provider can also auto-charge renewal fees without fresh approval, so these terms amplify the uncapped renewal increase and can turn an overlooked or disputed bill into a substantial cash cost.",
+        "recommendation": "Ask for simple interest capped at 1.5% per month or the legal maximum, whichever is lower; at least 30 days to dispute invoices; no interest on good-faith disputed amounts; and fresh written approval before charging any renewal fee.",
+        "quoted_text": "4.3 Any amount not paid when due shall accrue interest at the rate of two and one-half percent (2.5%) per month,\ncompounded monthly, or the maximum rate permitted by law, whichever is greater.\n4.4 Invoices shall be deemed accepted and undisputed unless Customer delivers written notice of a good-faith\ndispute within ten (10) days of the invoice date.\n4.5 Customer authorises Provider to charge the payment method on file for all Fees, including any Fees applicable\nto a Renewal Term, without further authorisation.",
+        "confidence": "high"
+      }
+    },
+    {
+      "at": 157.24,
+      "kind": "tool_result",
+      "name": "record_finding",
+      "output": {
+        "verified": true,
+        "page": 2
+      }
+    },
+    {
+      "at": 157.24,
+      "kind": "tool_call",
+      "name": "record_finding",
+      "input": {
+        "rule_id": "uncapped_price_escalation",
+        "severity": "high",
+        "title": "Renewal jumps to any list price Provider chooses",
+        "exposure": "There is no ceiling on the renewal price: Customer is moved to Provider's then-current list fees. The price arrives only 30 days before renewal, but Customer must opt out 120 days before renewal, so Customer can be locked into a 24-month term before learning the price and then charged automatically.",
+        "recommendation": "Ask to cap each renewal increase at the lower of 3% or CPI, require at least 150 days' advance price notice, and give Customer 30 days after receiving that notice to reject the increase and terminate without penalty.",
+        "quoted_text": "3.3 Fees applicable to any Renewal Term shall be Provider's then-current list fees. Provider shall notify Customer\nof the renewal fees not less than thirty (30) days before the commencement of the Renewal Term.",
+        "confidence": "high"
+      }
+    },
+    {
+      "at": 157.24,
+      "kind": "tool_result",
+      "name": "record_finding",
+      "output": {
+        "verified": true,
+        "page": 1
+      }
+    },
+    {
+      "at": 157.24,
+      "kind": "tool_call",
+      "name": "record_finding",
+      "input": {
+        "rule_id": "unfavorable_forum",
+        "severity": "medium",
+        "title": "All disputes require fee-split arbitration in Wilmington",
+        "exposure": "Customer must pursue every dispute through binding arbitration in Wilmington, Delaware, and pay half the arbitrator and administrative costs regardless of claim size. If Customer is based elsewhere or the claim is modest, travel and arbitration costs may make enforcement commercially pointless; jury and class procedures are also waived.",
+        "recommendation": "Ask for remote arbitration or the defendant's home jurisdiction, permit either party to use small-claims court for eligible disputes, and require Provider to bear arbitration fees beyond ordinary court filing costs where Customer brings the claim.",
+        "quoted_text": "16.2 Any dispute arising out of or relating to this Agreement shall be finally resolved by binding arbitration\nadministered in Wilmington, Delaware under the rules of the American Arbitration Association. Each party shall\nbear one half of the arbitrator's fees and administrative costs.",
+        "confidence": "high"
+      }
+    },
+    {
+      "at": 157.24,
+      "kind": "tool_result",
+      "name": "record_finding",
+      "output": {
+        "verified": true,
+        "page": 4
+      }
+    },
+    {
+      "at": 157.24,
+      "kind": "tool_call",
+      "name": "record_finding",
+      "input": {
+        "rule_id": "unilateral_amendment",
+        "severity": "high",
+        "title": "Provider can rewrite the deal by posting new terms",
+        "exposure": "Provider can change nearly the entire Agreement on 30 days' notice through a website posting, and Customer's continued use is treated as consent. Separate clauses also let Provider revise the Acceptable Use Policy at its sole discretion and update the online Service Description, so Customer may lose rights or functionality without signing anything and has no penalty-free exit right.",
+        "recommendation": "Ask that material changes to the Agreement, Service Description, or incorporated policies require Customer's written agreement; at minimum, require direct written notice and a 30-day right to terminate without penalty or refund prepaid fees if Customer rejects a material change.",
+        "quoted_text": "17.2 Provider may amend this Agreement, other than the Fees set out in an Order Form, upon thirty (30) days'\nnotice by posting a revised version to northwind-analytics.com/terms. Customer's continued use of the Services\nafter the effective date of such revision constitutes acceptance.",
+        "confidence": "high"
+      }
+    },
+    {
+      "at": 157.24,
+      "kind": "tool_result",
+      "name": "record_finding",
+      "output": {
+        "verified": true,
+        "page": 5
+      }
+    },
+    {
+      "at": 166.03,
+      "kind": "tool_call",
+      "name": "finalize",
+      "input": {
+        "summary": "The worst term blocks you from using another similar analytics provider for the entire contract and two years afterward, which can trap your data and operations with Northwind. Northwind does not promise to keep your confidential information confidential, gives you no proper personal-data or breach protections, and can use de-identified data to train its models forever. It also takes ownership of every suggestion or product improvement you share, without payment or credit."
+      }
+    },
+    {
+      "at": 166.03,
+      "kind": "tool_result",
+      "name": "finalize",
+      "output": {
+        "complete": true
+      }
+    },
+    {
+      "at": 166.03,
+      "kind": "usage",
+      "input_tokens": 29358,
+      "cached_input_tokens": 20459,
+      "output_tokens": 2027
+    },
+    {
+      "at": 166.2,
+      "kind": "tool_call",
+      "name": "finalize",
+      "input": {
+        "summary": "The worst part is that Northwind can lock you into another 24 months before telling you the new price, charge that uncapped price automatically, and rewrite most of the deal by posting new terms online. You also get only 10 days to challenge invoices, face 2.5% monthly compound interest, and must pay half the cost of any arbitration in Wilmington, Delaware."
+      }
+    },
+    {
+      "at": 166.2,
+      "kind": "tool_result",
+      "name": "finalize",
+      "output": {
+        "complete": true
+      }
+    },
+    {
+      "at": 166.2,
+      "kind": "usage",
+      "input_tokens": 21847,
+      "cached_input_tokens": 12633,
+      "output_tokens": 2424
+    }
+  ],
+  "usage": {
+    "input_tokens": 92749,
+    "cached_input_tokens": 58012,
+    "output_tokens": 7856,
+    "cost_microdollars": 438371
+  },
+  "seconds": 166.2
+}

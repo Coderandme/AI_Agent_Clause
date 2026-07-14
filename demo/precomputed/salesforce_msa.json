@@ -1,0 +1,1048 @@
+{
+  "slug": "salesforce_msa",
+  "filename": "salesforce_msa.pdf",
+  "blurb": "salesforce.com Master Subscription Agreement \u2014 a REAL contract, filed with the SEC by SolarWinds (EX-10.28), who were the customer. This is the one the eval harness grades against a hand-written answer key.",
+  "page_count": 10,
+  "char_count": 35902,
+  "scan_model": "gpt-5.6-sol",
+  "rule_library_version": "d93f7291e878",
+  "prompt_version": "b1a64a126b32",
+  "summary": "Salesforce promises a basic performance standard but gives you no service credits, outage remedy, or repeat-failure exit if the service does not meet it. Your liability is capped at 12 months of fees on the same basis as Salesforce\u2019s, and both sides provide indemnities under that cap.",
+  "findings": [
+    {
+      "rule_id": "missing_sla_or_remedy",
+      "severity": "medium",
+      "title": "Service warranty has no credit or outage remedy",
+      "exposure": "Salesforce promises only performance consistent with general industry standards and its online help documentation, but the agreement gives you no service credits, uptime remedy, or repeat-failure termination right if it misses that standard. The broad \u201cas is\u201d disclaimer and exclusion of lost data, revenue, and profits make the promise especially difficult to monetize when downtime harms your business.",
+      "recommendation": "Ask for a written SLA with measurable uptime and support response targets, service credits that scale with the failure, and a right to terminate and receive a pro-rata refund after repeated or sustained failures; specify that credits are not the sole remedy for sustained outages.",
+      "quoted_text": "Salesforce.com represents and warrants that it will provide the Service in a manner consistent with general industry standards reasonably applicable to the provision thereof and that the Service will perform substantially in accordance with the online salesforce.com help documentation under normal use and circumstances.",
+      "confidence": "high",
+      "verified": true,
+      "matched_text": "Salesforce.com represents and warrants that it will\nprovide the Service in a manner consistent with general industry standards reasonably applicable to the provision thereof\nand\nthat the Service will perform substantially in accordance with the online salesforce.com help documentation under\nnormal use and circumstances.",
+      "char_start": 18795,
+      "char_end": 19116,
+      "page_number": 6
+    },
+    {
+      "rule_id": "assignment_change_of_control",
+      "severity": "medium",
+      "title": "Salesforce can transfer the deal without your consent",
+      "exposure": "You cannot assign this agreement without Salesforce\u2019s approval, but Salesforce can transfer it to a parent, subsidiary, asset buyer, or merger successor without asking you. That could leave your service and Customer Data relationship in the hands of an acquirer you would not have chosen, with no matching exit right for you.",
+      "recommendation": "Ask to make assignment restrictions mutual and add a right to terminate without penalty, with a pro-rata refund and data export, if Salesforce assigns the agreement to an acquirer you reasonably object to, especially a competitor.",
+      "quoted_text": "This Agreement may not be assigned by you\nwithout the prior written approval of salesforce.com but may be assigned without your consent by salesforce.com to (i) a\nparent or subsidiary, (ii) an acquirer of assets, or (iii) a successor by merger.",
+      "confidence": "high",
+      "verified": true,
+      "matched_text": "This Agreement may not be assigned by you\nwithout the prior written approval of salesforce.com but may be assigned without your consent by salesforce.com to (i) a\nparent or subsidiary, (ii) an acquirer of assets, or (iii) a successor by merger.",
+      "char_start": 28711,
+      "char_end": 28955,
+      "page_number": 8
+    },
+    {
+      "rule_id": "auto_renewal",
+      "severity": "high",
+      "title": "The subscription auto-renews unless notice beats the invoice",
+      "exposure": "The agreement automatically rolls into another full term unless written notice arrives at least five business days before the next invoice date. Because the deadline is tied to an invoice rather than a clearly stated renewal date\u2014and your notice methods are more restrictive than Salesforce\u2019s\u2014the window is easy to miss, leaving you committed to another noncancelable, nonrefundable term.",
+      "recommendation": "Ask for renewal only by affirmative written agreement. If Salesforce refuses, ask for a clear 30-day pre-expiry cancellation window, an email renewal reminder at least 60 days before expiry, and permission to cancel by email or through the account portal.",
+      "quoted_text": "Upon the expiration of the\nInitial Term, this Agreement will automatically renew for successive renewal terms equal in duration to the Initial Term\n(or one\nyear, if the Initial Term is greater than one year) at salesforce.com\u2019s then current fees. Either party may terminate this\nAgreement or reduce the number of licenses, effective only upon the expiration of the then current License Term, by\nnotifying the other party in writing at least five (5) business days prior to the date of the invoice for the following term.",
+      "confidence": "high",
+      "verified": true,
+      "matched_text": "Upon the expiration of the\nInitial Term, this Agreement will automatically renew for successive renewal terms equal in duration to the Initial Term\n(or one\nyear, if the Initial Term is greater than one year) at salesforce.com\u2019s then current fees. Either party may terminate this\nAgreement or reduce the number of licenses, effective only upon the expiration of the then current License Term, by\nnotifying the other party in writing at least five (5) business days prior to the date of the invoice for the following term.",
+      "char_start": 16822,
+      "char_end": 17342,
+      "page_number": 5
+    },
+    {
+      "rule_id": "unilateral_termination",
+      "severity": "high",
+      "title": "Salesforce has broader mid-term termination rights",
+      "exposure": "Salesforce may terminate your account mid-term for any breach or other failure to comply, while the agreement gives you no matching express right to terminate mid-term if Salesforce breaches. Your payment obligations are noncancelable and prepaid amounts nonrefundable, so a disputed compliance issue can cut off service while leaving the financial commitment in place; free and Personal Edition accounts face an additional at-will termination right.",
+      "recommendation": "Ask for mutual termination rights for material breach, subject to at least 30 days\u2019 written notice and an opportunity to cure. Require a pro-rata refund of prepaid fees and a reasonable Customer Data export period if Salesforce terminates other than for an uncured material breach.",
+      "quoted_text": "Salesforce.com, in its sole discretion, may terminate your password, account or use of the Service if you breach or\notherwise fail to\ncomply with this Agreement. In addition, salesforce.com may terminate a free account at any time in its sole discretion.",
+      "confidence": "high",
+      "verified": true,
+      "matched_text": "Salesforce.com, in its sole discretion, may terminate your password, account or use of the Service if you breach or\notherwise fail to\ncomply with this Agreement. In addition, salesforce.com may terminate a free account at any time in its sole discretion.",
+      "char_start": 18086,
+      "char_end": 18340,
+      "page_number": 6
+    },
+    {
+      "rule_id": "confidentiality_defect",
+      "severity": "high",
+      "title": "Only Salesforce\u2019s pricing gets confidentiality protection",
+      "exposure": "You must keep Salesforce\u2019s pricing confidential, but Salesforce gives no matching contractual promise to protect your confidential business information or Customer Data. Sensitive information you upload therefore lacks basic confidentiality terms, exceptions, and a defined protection period in this agreement.",
+      "recommendation": "Ask for mutual confidentiality obligations covering each party\u2019s non-public information, with standard exceptions for information already known, independently developed, public, or legally required to be disclosed; protect trade secrets for as long as they remain trade secrets and other information for at least five years.",
+      "quoted_text": "All pricing terms are confidential, and you agree not to disclose them to\nany third party.",
+      "confidence": "high",
+      "verified": true,
+      "matched_text": "All pricing terms are confidential, and you agree not to disclose\nthem to\nany third party.",
+      "char_start": 11843,
+      "char_end": 11933,
+      "page_number": 4
+    },
+    {
+      "rule_id": "missing_data_protection",
+      "severity": "high",
+      "title": "Customer Data has no fixed breach or processing safeguards",
+      "exposure": "The agreement has no data processing terms, breach-notification deadline, purpose limits, or subprocessor controls, while Salesforce can change its online privacy and security policies. You may learn too late about a personal-data breach to meet your own notification duties, and Salesforce also disclaims responsibility for loss or failure to store Customer Data.",
+      "recommendation": "Ask Salesforce to sign a data processing addendum that limits processing to providing the Service, controls subprocessors and international transfers, requires notice of any breach without undue delay and within 72 hours, prohibits model training or unrelated use, and requires return or deletion with certification at termination.",
+      "quoted_text": "Salesforce.com\u2019s privacy and security policies may be viewed at\nhttp://www.salesforce.com or http://www.salesforce.com/ie/ (EMEA). Salesforce.com reserves the right to modify its\nprivacy and security policies in its reasonable discretion from time to time.",
+      "confidence": "high",
+      "verified": true,
+      "matched_text": "Salesforce.com\u2019s privacy and security policies may be viewed at\nhttp://www.salesforce.com or http://www.salesforce.com/ie/ (EMEA). Salesforce.com reserves the right to modify its\nprivacy and security policies in its reasonable discretion from time to time.",
+      "char_start": 1823,
+      "char_end": 2079,
+      "page_number": 1
+    },
+    {
+      "rule_id": "overbroad_ip_assignment",
+      "severity": "high",
+      "title": "Salesforce takes ownership of all service-related feedback",
+      "exposure": "Any suggestion, idea, enhancement request, recommendation, or other information you provide about the Service becomes Salesforce\u2019s property, with no carve-out for your pre-existing tools or know-how. That could capture product concepts or reusable methods embedded in feedback and leave you unable to assert ownership over them.",
+      "recommendation": "Ask to replace ownership transfer with a non-exclusive license limited to using feedback to improve the Service, and expressly retain all pre-existing IP, general know-how, tools, methods, and ideas that do not disclose Salesforce confidential information.",
+      "quoted_text": "Salesforce.com alone (and its licensors, where applicable) shall own all right, title and interest, including all related\nIntellectual Property Rights, in and to the Salesforce.com Technology, the Content and the Service and any\nsuggestions, ideas, enhancement requests, feedback, recommendations or other information provided by you or any\nother party relating to the Service.",
+      "confidence": "high",
+      "verified": true,
+      "matched_text": "Salesforce.com alone (and its licensors, where applicable) shall own all right, title and interest, including all related\nIntellectual Property Rights, in and to the Salesforce.com Technology, the Content and the Service and any\nsuggestions, ideas, enhancement requests, feedback, recommendations or other information provided by you or any\nother party relating to the Service.",
+      "char_start": 7844,
+      "char_end": 8221,
+      "page_number": 3
+    },
+    {
+      "rule_id": "payment_terms",
+      "severity": "high",
+      "title": "A changed renewal price can hit your stored card automatically",
+      "exposure": "Salesforce can auto-renew the subscription and charge your card after giving only 30 days\u2019 notice of a fee increase. Because fees are paid annually in advance, noncancelable and nonrefundable, missing the narrow exit window can lock you into the full increased annual charge.",
+      "recommendation": "Ask Salesforce to invoice renewal charges on Net-30 terms, require your written approval before charging any increased renewal price to a stored card, and make disputed amounts non-delinquent while a good-faith billing dispute is being resolved.",
+      "quoted_text": "Salesforce.com will automatically renew and bill your credit card or issue an invoice to you each year on the subsequent anniversary or as otherwise mutually agreed upon. The renewal charge will be equal to the then-current number of total User licenses times the license fee in effect during the prior term, unless salesforce.com has given you at least 30 days prior written notice of a fee increase, which shall be effective upon renewal and thereafter.",
+      "confidence": "high",
+      "verified": true,
+      "matched_text": "Salesforce.com will automatically renew and bill\nyour credit card or issue an invoice to you each year on the subsequent\nanniversary or as otherwise mutually agreed upon. The renewal charge will be equal to the then-current number of total\nUser licenses times the license fee in effect during the prior term, unless salesforce.com has given you at least 30 days\nprior\nwritten notice of a fee increase, which shall be effective upon renewal and thereafter.",
+      "char_start": 12894,
+      "char_end": 13349,
+      "page_number": 4
+    },
+    {
+      "rule_id": "uncapped_price_escalation",
+      "severity": "high",
+      "title": "Renewal price increases have no ceiling",
+      "exposure": "Salesforce may increase fees at renewal by any amount with only 30 days\u2019 notice. The contract also auto-renews and requires non-renewal notice before the next invoice, so you may have little practical time to migrate data and replace a business-critical CRM before the higher price applies.",
+      "recommendation": "Ask for renewal increases to be capped at the lower of 3% or CPI, with at least 90 days\u2019 advance notice and a right to cancel without charge for 30 days after any increase notice.",
+      "quoted_text": "The renewal charge will be equal to the then-current number of total User licenses times the license fee in effect during the prior term, unless salesforce.com has given you at least 30 days prior written notice of a fee increase, which shall be effective upon renewal and thereafter.",
+      "confidence": "high",
+      "verified": true,
+      "matched_text": "The renewal charge will be equal to the then-current number of total\nUser licenses times the license fee in effect during the prior term, unless salesforce.com has given you at least 30 days\nprior\nwritten notice of a fee increase, which shall be effective upon renewal and thereafter.",
+      "char_start": 13065,
+      "char_end": 13349,
+      "page_number": 4
+    },
+    {
+      "rule_id": "unfavorable_forum",
+      "severity": "medium",
+      "title": "U.S. disputes must be litigated in San Francisco",
+      "exposure": "Every U.S. customer must bring or defend disputes in San Francisco under California law, even if based elsewhere. Travel and local-lawyer costs can exceed the value of a modest billing or service claim, making enforcement commercially impractical.",
+      "recommendation": "Ask for disputes to be heard where the defendant is located, or in a mutually neutral venue, and preserve either party\u2019s ability to bring low-value claims in its local small-claims court.",
+      "quoted_text": "With respect to U.S. Customers, this Agreement shall be governed by California law and controlling United States federal law, without regard to the choice or conflicts of law provisions of any jurisdiction, and any disputes, actions, claims or causes of action arising out of or in connection with this Agreement or the Service shall be subject to the exclusive jurisdiction of the state and federal courts located in San Francisco, California.",
+      "confidence": "high",
+      "verified": true,
+      "matched_text": "With respect to U.S. Customers, this Agreement shall be governed by California law and controlling United States\nfederal law, without regard to the choice\nor conflicts of law provisions of any jurisdiction, and any disputes, actions, claims or causes of action arising out of or in\nconnection with this Agreement or the Service shall be subject to the exclusive jurisdiction of the state and federal\ncourts located in San Francisco, California.",
+      "char_start": 29320,
+      "char_end": 29764,
+      "page_number": 9
+    },
+    {
+      "rule_id": "unilateral_amendment",
+      "severity": "high",
+      "title": "Salesforce can rewrite the deal by posting new terms",
+      "exposure": "Salesforce may change the agreement or service policies at any time merely by posting an updated version, and your continued use is treated as consent. This lets it alter important operational or commercial terms while you depend on the service, without your signature or an express right to reject the change and exit without penalty.",
+      "recommendation": "Ask that material changes to price, service scope, data handling, liability or incorporated policies require written agreement; at minimum, require 30 days\u2019 direct notice and a penalty-free termination and refund right if you reject a material change.",
+      "quoted_text": "Salesforce.com reserves the right to modify the terms and conditions of this Agreement or its policies relating to the Service at any time, effective upon posting of an updated version of this Agreement on the Service. You are responsible for regularly reviewing this Agreement. Continued use of the Service after any such changes shall constitute your consent to such changes.",
+      "confidence": "high",
+      "verified": true,
+      "matched_text": "Salesforce.com reserves the right to modify the terms and conditions of this Agreement or its policies relating to the\nService at any time, effective upon posting of an updated version of this\nAgreement on the Service. You are responsible for regularly reviewing this Agreement. Continued use of the Service\nafter any such changes shall constitute your consent to such changes.",
+      "char_start": 28299,
+      "char_end": 28676,
+      "page_number": 8
+    }
+  ],
+  "unverified_count": 0,
+  "absences": [
+    {
+      "rule_id": "asymmetric_liability_cap",
+      "rationale": "Section 17 applies the same aggregate cap\u2014amounts paid and/or due in the preceding 12 months\u2014to either party, with no express one-sided carve-outs."
+    },
+    {
+      "rule_id": "one_sided_indemnity",
+      "rationale": "Section 14 contains indemnities in both directions for third-party IP-related claims, representation or warranty violations, and breaches, and the customer indemnity is not expressly carved out of the mutual liability cap."
+    },
+    {
+      "rule_id": "uncapped_liability",
+      "rationale": "Section 17 caps either party\u2019s aggregate liability at the amounts paid and/or due in the 12 months before the event, and the agreement contains no express carve-out making the customer\u2019s indemnity or other obligations uncapped."
+    },
+    {
+      "rule_id": "non_compete",
+      "rationale": "The agreement restricts competitors from accessing or benchmarking the Service, but it does not bar you from serving customers, operating in a market, soliciting customers, or doing business with other providers."
+    }
+  ],
+  "key_terms": {
+    "parties": [
+      "You",
+      "salesforce.com, inc.",
+      "salesforce.com S\u00e0rl"
+    ],
+    "effective_date": "the earlier of either the date this Agreement is accepted by selecting the \u201cI Accept\u201d option presented on the screen after this Agreement is displayed or the date you begin using the Service",
+    "initial_term": "the initial period during which you are obligated to pay for the Service equal to the billing frequency selected by you during the subscription process",
+    "renewal": "Automatically renews for successive terms equal to the Initial Term, or one year if the Initial Term exceeds one year; either party must give written notice at least five (5) business days before the invoice date for the following term to terminate or reduce licenses at term-end.",
+    "notice_period": "Either party: written notice at least five (5) business days before the invoice date for the following term to terminate or reduce licenses effective at the end of the current License Term.",
+    "payment_terms": "Annually in advance unless otherwise agreed; obligations are noncancelable and payments nonrefundable; 60 days to dispute an invoice; delinquent balances accrue 1.0% per month plus collection expenses.",
+    "liability_cap": "Mutual aggregate cap equal to amounts paid and/or due in the 12 months preceding the event; the agreement states no express carve-outs from the cap.",
+    "governing_law": "U.S. Customers: California law and exclusive state/federal courts in San Francisco, California. Non-U.S./Japan Customers: Swiss law and exclusive courts of Switzerland. Japanese Customers: Japanese-language agreement unless salesforce.com decides otherwise.",
+    "termination_rights": "Either party may terminate only at the end of the current License Term with timely notice. Salesforce.com may suspend or terminate for delinquency, terminate for your breach or noncompliance, terminate free accounts at will, and terminate immediately if a competitor gains 50% control of you; Salesforce Personal Edition is terminable at salesforce.com\u2019s sole discretion."
+  },
+  "trace": [
+    {
+      "at": 6.55,
+      "kind": "tool_call",
+      "name": "get_rule_detail",
+      "input": {
+        "rule_id": "asymmetric_liability_cap"
+      }
+    },
+    {
+      "at": 6.55,
+      "kind": "tool_result",
+      "name": "get_rule_detail",
+      "output": {
+        "rule_id": "asymmetric_liability_cap",
+        "title": "Liability cap protects them, not you",
+        "default_severity": "high",
+        "exposure": "Their exposure is capped and yours is not \u2014 or theirs is capped far lower \u2014 so the same failure costs you many times what it would cost them.",
+        "detection_guidance": "Compare the two directions explicitly. Asymmetry is often achieved through drafting rather than through numbers: a cap that applies to \"Provider's liability\" while the customer's obligations are addressed in a separate, uncapped indemnity is asymmetric even though both parties appear to have a cap.\nAlso compare the multipliers. \"Provider's liability shall not exceed fees paid in the prior 3 months\" against a customer cap of 12 months' fees is a 4x asymmetry stated quietly.\nNote the direction of the asymmetry relative to the reader. We review on behalf of the party RECEIVING the contract, so a cap favouring the drafter is a finding; one favouring the reader is not.",
+        "recommended_redline": "Ask for the cap to be mutual and set at the same multiple in both directions, with the same carve-outs applying to both parties."
+      }
+    },
+    {
+      "at": 6.55,
+      "kind": "tool_call",
+      "name": "get_rule_detail",
+      "input": {
+        "rule_id": "missing_sla_or_remedy"
+      }
+    },
+    {
+      "at": 6.55,
+      "kind": "tool_result",
+      "name": "get_rule_detail",
+      "output": {
+        "rule_id": "missing_sla_or_remedy",
+        "title": "Performance promised, but nothing happens if they miss it",
+        "default_severity": "medium",
+        "exposure": "They commit to a level of service, but there is no consequence when they fail to deliver it \u2014 so the commitment is decorative.",
+        "detection_guidance": "A service level without a REMEDY is the finding. Look for uptime or response-time commitments and then ask what happens when they are breached. If the answer is nothing, or only \"Provider will use commercially reasonable efforts to restore service\", the SLA has no teeth.\nWhere service credits do exist, check whether they are the SOLE AND EXCLUSIVE remedy. That phrase converts a service failure from a breach you could sue over into a small discount, and it is easy to skim past.\nAlso check whether claiming the credit requires the customer to notice and file within a short window \u2014 a remedy that expires in 10 days is a remedy most customers will never collect.",
+        "recommended_redline": "Ask for meaningful service credits that scale with the severity of the failure, for a termination right if the SLA is missed repeatedly, and for the credits NOT to be the sole remedy for a sustained outage."
+      }
+    },
+    {
+      "at": 6.55,
+      "kind": "tool_call",
+      "name": "get_rule_detail",
+      "input": {
+        "rule_id": "one_sided_indemnity"
+      }
+    },
+    {
+      "at": 6.55,
+      "kind": "tool_result",
+      "name": "get_rule_detail",
+      "output": {
+        "rule_id": "one_sided_indemnity",
+        "title": "You indemnify them, they don't indemnify you",
+        "default_severity": "critical",
+        "exposure": "You would cover their legal costs and damages for claims arising from their own conduct \u2014 a lawsuit they caused can become a bill you pay.",
+        "detection_guidance": "Identify who indemnifies whom, and for what. Look for indemnity obligations that run in one direction only, or that are grossly broader in one direction.\nThe dangerous drafting is usually in the SCOPE, not the existence: an indemnity for \"any claim arising out of or relating to Customer's use of the Services\" can capture claims caused entirely by the provider's own defective software, because the customer's use is the proximate occasion of the claim. \"Arising out of or relating to\" is doing enormous work in that sentence and should be flagged.\nCheck whether the indemnity is carved out of the liability cap (see uncapped_liability). An indemnity that survives the cap is where the real money is.\nA mutual, narrowly-scoped IP indemnity from the vendor is normal and is NOT this finding.",
+        "recommended_redline": "Ask for mutual indemnities, narrowed to third-party claims caused by the indemnifying party's own breach, negligence, or IP infringement \u2014 and ask for them to sit inside the liability cap."
+      }
+    },
+    {
+      "at": 6.55,
+      "kind": "tool_call",
+      "name": "get_rule_detail",
+      "input": {
+        "rule_id": "uncapped_liability"
+      }
+    },
+    {
+      "at": 6.55,
+      "kind": "tool_result",
+      "name": "get_rule_detail",
+      "output": {
+        "rule_id": "uncapped_liability",
+        "title": "No cap on your liability",
+        "default_severity": "critical",
+        "exposure": "There is no ceiling on what a single mistake can cost you \u2014 one bad incident could exceed the entire value of the contract, or the value of your company.",
+        "detection_guidance": "Look for the limitation-of-liability clause and establish whether one exists at all. Its absence is itself the finding, and is easy to miss precisely because there is nothing to read.\nWhen a cap IS present, the danger usually lives in the carve-outs, not the cap: a clause capping liability at fees paid, followed by \"except for breaches of confidentiality, data protection, IP infringement, and indemnity obligations\", may leave every realistic large loss uncapped while looking protective. Read the exclusions before deciding the cap is adequate.\nCross-reference the indemnity clause. Indemnities are frequently carved out of the cap in a separate section, and an uncapped indemnity is an uncapped liability wearing a different hat. This interaction between distant clauses is exactly why the agent reads the whole document.",
+        "recommended_redline": "Ask for an aggregate cap on all liability, expressed as a multiple of fees paid in the preceding twelve months. Confirm which carve-outs sit outside it and push to narrow them \u2014 particularly any carve-out for indemnities."
+      }
+    },
+    {
+      "at": 50.16,
+      "kind": "tool_call",
+      "name": "record_key_terms",
+      "input": {
+        "parties": [
+          "You",
+          "salesforce.com, inc.",
+          "salesforce.com S\u00e0rl"
+        ],
+        "effective_date": "the earlier of either the date this Agreement is accepted by selecting the \u201cI Accept\u201d option presented on the screen after this Agreement is displayed or the date you begin using the Service",
+        "initial_term": "the initial period during which you are obligated to pay for the Service equal to the billing frequency selected by you during the subscription process",
+        "renewal": "Automatically renews for successive terms equal to the Initial Term (or one year if the Initial Term is greater than one year); either party must give written notice at least five (5) business days prior to the invoice date for the following term to prevent renewal or reduce licenses.",
+        "notice_period": "Either party: written notice at least five (5) business days before the invoice date for the following term to terminate at term-end or reduce licenses; breach cure period is 30 days after notice for material breach before Customer Data may be deleted.",
+        "payment_terms": "Payments annually in advance unless otherwise agreed in an Order Form or through the Online Order Center; obligations are noncancelable and amounts paid are nonrefundable; delinquent balances bear 1.0% monthly interest plus collection expenses.",
+        "liability_cap": "Either party\u2019s aggregate liability is capped at amounts actually paid by and/or due from you in the 12 months immediately preceding the event; no express carve-outs from the cap.",
+        "governing_law": "U.S. Customers: California law and exclusive San Francisco state and federal courts. Non-U.S./Japan Customers: Swiss law and exclusive Swiss courts. Japanese Customers: Japanese-language agreement unless salesforce.com decides otherwise.",
+        "termination_rights": "Either party may terminate only at the end of the current License Term with timely notice. Salesforce.com may suspend or terminate for delinquency, terminate for Customer breach or noncompliance, terminate free accounts at will, and terminate immediately if Customer control passes to a direct competitor; Salesforce Personal Edition is terminable at Salesforce.com\u2019s sole discretion."
+      }
+    },
+    {
+      "at": 50.16,
+      "kind": "tool_result",
+      "name": "record_key_terms",
+      "output": {
+        "recorded": true
+      }
+    },
+    {
+      "at": 50.16,
+      "kind": "tool_call",
+      "name": "note_absence",
+      "input": {
+        "rule_id": "asymmetric_liability_cap",
+        "rationale": "Section 17 applies the same aggregate cap\u2014amounts paid and/or due in the preceding 12 months\u2014to either party, with no express one-sided carve-outs."
+      }
+    },
+    {
+      "at": 50.16,
+      "kind": "tool_result",
+      "name": "note_absence",
+      "output": {
+        "recorded": true
+      }
+    },
+    {
+      "at": 50.16,
+      "kind": "tool_call",
+      "name": "record_finding",
+      "input": {
+        "rule_id": "missing_sla_or_remedy",
+        "severity": "medium",
+        "title": "Service warranty has no credit or outage remedy",
+        "exposure": "Salesforce promises only performance consistent with general industry standards and its online help documentation, but the agreement gives you no service credits, uptime remedy, or repeat-failure termination right if it misses that standard. The broad \u201cas is\u201d disclaimer and exclusion of lost data, revenue, and profits make the promise especially difficult to monetize when downtime harms your business.",
+        "recommendation": "Ask for a written SLA with measurable uptime and support response targets, service credits that scale with the failure, and a right to terminate and receive a pro-rata refund after repeated or sustained failures; specify that credits are not the sole remedy for sustained outages.",
+        "quoted_text": "Salesforce.com represents and warrants that it will provide the Service in a manner consistent with general industry standards reasonably applicable to the provision thereof and that the Service will perform substantially in accordance with the online salesforce.com help documentation under normal use and circumstances.",
+        "confidence": "high"
+      }
+    },
+    {
+      "at": 50.16,
+      "kind": "tool_result",
+      "name": "record_finding",
+      "output": {
+        "verified": true,
+        "page": 6
+      }
+    },
+    {
+      "at": 50.16,
+      "kind": "tool_call",
+      "name": "note_absence",
+      "input": {
+        "rule_id": "one_sided_indemnity",
+        "rationale": "Section 14 contains indemnities in both directions for third-party IP-related claims, representation or warranty violations, and breaches, and the customer indemnity is not expressly carved out of the mutual liability cap."
+      }
+    },
+    {
+      "at": 50.16,
+      "kind": "tool_result",
+      "name": "note_absence",
+      "output": {
+        "recorded": true
+      }
+    },
+    {
+      "at": 50.16,
+      "kind": "tool_call",
+      "name": "note_absence",
+      "input": {
+        "rule_id": "uncapped_liability",
+        "rationale": "Section 17 caps either party\u2019s aggregate liability at the amounts paid and/or due in the 12 months before the event, and the agreement contains no express carve-out making the customer\u2019s indemnity or other obligations uncapped."
+      }
+    },
+    {
+      "at": 50.16,
+      "kind": "tool_result",
+      "name": "note_absence",
+      "output": {
+        "recorded": true
+      }
+    },
+    {
+      "at": 55.5,
+      "kind": "tool_call",
+      "name": "finalize",
+      "input": {
+        "summary": "Salesforce promises a basic performance standard but gives you no service credits, outage remedy, or repeat-failure exit if the service does not meet it. Your liability is capped at 12 months of fees on the same basis as Salesforce\u2019s, and both sides provide indemnities under that cap."
+      }
+    },
+    {
+      "at": 55.5,
+      "kind": "tool_result",
+      "name": "finalize",
+      "output": {
+        "complete": true
+      }
+    },
+    {
+      "at": 55.5,
+      "kind": "usage",
+      "input_tokens": 36199,
+      "cached_input_tokens": 33604,
+      "output_tokens": 1470
+    },
+    {
+      "at": 59.02,
+      "kind": "tool_call",
+      "name": "get_rule_detail",
+      "input": {
+        "rule_id": "assignment_change_of_control"
+      }
+    },
+    {
+      "at": 59.02,
+      "kind": "tool_result",
+      "name": "get_rule_detail",
+      "output": {
+        "rule_id": "assignment_change_of_control",
+        "title": "They can be acquired and the contract goes with them",
+        "default_severity": "medium",
+        "exposure": "The counterparty can transfer this contract to whoever buys them \u2014 potentially your direct competitor \u2014 and you have no say and no exit.",
+        "detection_guidance": "Find the assignment clause and establish whether it is mutual. The common pattern is that the customer may not assign without consent, while the provider may freely assign \"in connection with a merger, acquisition, or sale of all or substantially all assets\".\nThe finding is stronger when the contract involves confidential information, exclusive commitments, or a competitor-sensitive relationship, because the identity of the counterparty is then material to the deal in a way it otherwise might not be.\nCheck whether a change of control gives the other side a termination right but not you.",
+        "recommended_redline": "Ask for the assignment right to be mutual, or for a right to terminate without penalty if the counterparty is acquired by a competitor."
+      }
+    },
+    {
+      "at": 59.02,
+      "kind": "tool_call",
+      "name": "get_rule_detail",
+      "input": {
+        "rule_id": "auto_renewal"
+      }
+    },
+    {
+      "at": 59.02,
+      "kind": "tool_result",
+      "name": "get_rule_detail",
+      "output": {
+        "rule_id": "auto_renewal",
+        "title": "Renews automatically, and the exit window is easy to miss",
+        "default_severity": "high",
+        "exposure": "The contract renews itself, and by the time anyone thinks to look, the window to stop it has already closed \u2014 committing you to another full term you did not choose.",
+        "detection_guidance": "Find the renewal mechanics, then find the notice period \u2014 they are very often in DIFFERENT sections, and the danger only becomes visible when you put them together. A twelve-month auto-renewal is unremarkable; a twelve-month auto-renewal with a ninety-day notice window is a trap, because the decision must be made nine months into a twelve-month term.\nNote who may decline renewal. Sometimes only one party can.\nSeverity rises when the notice period is long relative to the term, when notice must be given by a specific method (registered post, a named contact), or when the renewal is for a term LONGER than the initial one.",
+        "recommended_redline": "Ask for renewal to require affirmative written consent. Failing that, ask to shorten the notice period to 30 days, and to receive a renewal reminder at least 30 days before the window closes."
+      }
+    },
+    {
+      "at": 59.02,
+      "kind": "tool_call",
+      "name": "get_rule_detail",
+      "input": {
+        "rule_id": "unilateral_termination"
+      }
+    },
+    {
+      "at": 59.02,
+      "kind": "tool_result",
+      "name": "get_rule_detail",
+      "output": {
+        "rule_id": "unilateral_termination",
+        "title": "They can walk away, you cannot",
+        "default_severity": "high",
+        "exposure": "They can end the contract on short notice or for no reason at all, while you are locked in for the full term \u2014 so you carry all of the commitment and none of the flexibility.",
+        "detection_guidance": "Compare the termination rights of each party side by side. Look specifically for termination \"for convenience\" available to only one party, or for materially different notice periods.\nCheck what happens to money on termination: a right to terminate for convenience is far worse when prepaid fees are non-refundable, and the two facts are usually in different sections.\nAlso look for termination triggers that are effectively one-sided in practice even when symmetric on paper \u2014 for example a right to terminate on the other party's \"insolvency or material adverse change\", where one party is a startup and the other is not.",
+        "recommended_redline": "Ask for mutual termination rights on equal notice. If they retain termination for convenience, ask for a pro-rata refund of prepaid fees and a transition period to migrate off the service."
+      }
+    },
+    {
+      "at": 59.12,
+      "kind": "tool_call",
+      "name": "get_rule_detail",
+      "input": {
+        "rule_id": "payment_terms"
+      }
+    },
+    {
+      "at": 59.12,
+      "kind": "tool_result",
+      "name": "get_rule_detail",
+      "output": {
+        "rule_id": "payment_terms",
+        "title": "Payment terms are stacked against you",
+        "default_severity": "medium",
+        "exposure": "You must pay long before you are paid, or face punitive charges for a late invoice, or have no window in which to dispute a bill that is simply wrong.",
+        "detection_guidance": "Three distinct problems, any of which triggers this rule:\n1. Long payment windows running against the reader (Net-60, Net-90) \u2014 particularly damaging\n   where the reader is the party providing services and awaiting payment.\n2. Punitive late fees or interest. Note the rate: 1.5% per month is standard; anything\n   materially above that, or compounding, is a finding.\n3. No dispute window, or a very short one. If invoices are \"deemed accepted\" after 10 days,\n   a billing error becomes unchallengeable almost immediately.\n\nAlso flag automatic payment authorisation combined with a unilateral price change right \u2014 the combination means they can charge a new amount to a stored card without a conversation.",
+        "recommended_redline": "Ask for Net-30, interest capped at a standard commercial rate, and a dispute window of at least 30 days during which disputed amounts are not deemed accepted and do not accrue interest."
+      }
+    },
+    {
+      "at": 59.12,
+      "kind": "tool_call",
+      "name": "get_rule_detail",
+      "input": {
+        "rule_id": "uncapped_price_escalation"
+      }
+    },
+    {
+      "at": 59.12,
+      "kind": "tool_result",
+      "name": "get_rule_detail",
+      "output": {
+        "rule_id": "uncapped_price_escalation",
+        "title": "They can raise the price at renewal without limit",
+        "default_severity": "high",
+        "exposure": "Nothing constrains what they may charge at renewal \u2014 and once your business depends on the service, \"take it or leave it\" is not really a choice.",
+        "detection_guidance": "Look for renewal pricing language. The absence of any constraint is the finding: silence on renewal pricing means the price is whatever they say it is.\nLook for weak constraints dressed as protection \u2014 \"Provider may increase fees at renewal upon 30 days' notice\" caps nothing at all, it merely tells you when.\nSeverity is highest where this combines with auto_renewal (the price rises AND you are already locked in) and with switching costs \u2014 data migration, integration work, exclusivity. Check for that interaction explicitly.",
+        "recommended_redline": "Ask for renewal increases to be capped \u2014 a fixed percentage, or CPI plus a small margin \u2014 and for advance notice long enough to actually change vendors."
+      }
+    },
+    {
+      "at": 59.12,
+      "kind": "tool_call",
+      "name": "get_rule_detail",
+      "input": {
+        "rule_id": "unfavorable_forum"
+      }
+    },
+    {
+      "at": 59.12,
+      "kind": "tool_result",
+      "name": "get_rule_detail",
+      "output": {
+        "rule_id": "unfavorable_forum",
+        "title": "Disputes must be fought somewhere expensive and far away",
+        "default_severity": "medium",
+        "exposure": "Any dispute must be litigated in their home jurisdiction \u2014 which can cost more to travel to and argue in than the amount you are arguing about, making small claims practically unwinnable.",
+        "detection_guidance": "Find the governing law and the venue/forum clause; they can differ, and both matter.\nWeigh the forum against the reader's location and the size of the contract. A forum clause naming a distant jurisdiction is a much bigger finding on a $20k contract than on a $2M one, because the cost of enforcement can exceed the value in dispute.\nLook for mandatory arbitration, and read its terms: who pays the arbitrator, where it is seated, and whether class actions or jury trials are waived. Mandatory arbitration in a distant seat, with fees split evenly, is a de facto bar to small claims.\nDo NOT opine on whether a given clause is enforceable in a given jurisdiction \u2014 SPEC.md \u00a74.6 puts that out of bounds. State the exposure, not the legal conclusion.",
+        "recommended_redline": "Ask for a neutral venue, or for the forum to be the defendant's home jurisdiction (which discourages opportunistic claims in both directions)."
+      }
+    },
+    {
+      "at": 59.12,
+      "kind": "tool_call",
+      "name": "get_rule_detail",
+      "input": {
+        "rule_id": "unilateral_amendment"
+      }
+    },
+    {
+      "at": 59.12,
+      "kind": "tool_result",
+      "name": "get_rule_detail",
+      "output": {
+        "rule_id": "unilateral_amendment",
+        "title": "They can change the terms without asking you",
+        "default_severity": "high",
+        "exposure": "They can rewrite the deal \u2014 including the price and what you are actually buying \u2014 by posting a new page on their website, and your continued use counts as agreement.",
+        "detection_guidance": "Look for language permitting one party to modify the terms, the policies, the service, or the fees at its discretion, with notice by posting rather than agreement.\nCritically, follow the INCORPORATION BY REFERENCE. A contract that incorporates an \"Acceptable Use Policy\", \"Service Description\", or \"Fee Schedule\" available at a URL, and separately allows that document to change at any time, has a unilateral amendment right even if the main agreement never uses the word \"amend\". This is a two-clause interaction and it is the most commonly missed instance of this rule.\nNote whether continued use is deemed acceptance. That converts silence into consent.",
+        "recommended_redline": "Ask for material changes \u2014 to price, to scope, to any incorporated policy \u2014 to require written agreement, or at minimum to trigger a right to terminate without penalty within 30 days."
+      }
+    },
+    {
+      "at": 59.16,
+      "kind": "tool_call",
+      "name": "get_rule_detail",
+      "input": {
+        "rule_id": "confidentiality_defect"
+      }
+    },
+    {
+      "at": 59.16,
+      "kind": "tool_result",
+      "name": "get_rule_detail",
+      "output": {
+        "rule_id": "confidentiality_defect",
+        "title": "Confidentiality protection is defective or one-way",
+        "default_severity": "medium",
+        "exposure": "Your confidential information is less protected than theirs, or protected for too short a time to matter, or the obligations bind you forever in a way you cannot realistically comply with.",
+        "detection_guidance": "Three distinct defects, any of which triggers this rule:\n1. ONE-WAY protection where the exchange is mutual \u2014 you disclose and they do not, but only\n   their information is protected.\n2. A duration that is too SHORT for the sensitivity involved (a two-year term on trade secrets\n   effectively publishes them at the end of it), or PERPETUAL in a way that is unworkable \u2014\n   perpetual obligations on all information, with no carve-out for information that becomes\n   public, is a compliance impossibility rather than a protection.\n3. Missing standard EXCEPTIONS \u2014 independently developed, already known, publicly available,\n   required by law. Their absence means routine conduct can become a breach.\n\nA mutual NDA with a 3-5 year term and standard exceptions is normal and is NOT a finding.",
+        "recommended_redline": "Ask for mutual obligations, a term appropriate to the sensitivity (perpetual for trade secrets, 3-5 years otherwise), and the four standard exceptions."
+      }
+    },
+    {
+      "at": 59.16,
+      "kind": "tool_call",
+      "name": "get_rule_detail",
+      "input": {
+        "rule_id": "missing_data_protection"
+      }
+    },
+    {
+      "at": 59.16,
+      "kind": "tool_result",
+      "name": "get_rule_detail",
+      "output": {
+        "rule_id": "missing_data_protection",
+        "title": "No real protection for the data you hand over",
+        "default_severity": "high",
+        "exposure": "There is no data processing agreement, no duty to tell you about a breach, and no limit on what they may do with your customers' personal data \u2014 and it is your name on the breach notice.",
+        "detection_guidance": "Check for the presence of: a data processing agreement or equivalent terms; a breach NOTIFICATION obligation with a stated timeframe; limits on processing purposes; restrictions on sub-processors; and deletion or return of data on termination.\nThe absence of any of these is a finding, and the absence of breach notification is the most serious \u2014 without it you may not learn of a breach in time to meet your own regulatory deadlines, which are typically 72 hours.\nLook for language permitting the provider to use customer data to \"improve the Services\" or to train models. That is a broad right, frequently drafted in a way that survives termination, and it is often the only place where data use is described at all.\nWhere the contract covers personal data and says nothing about it, say so plainly.",
+        "recommended_redline": "Ask for a data processing agreement, breach notification within 72 hours, an express prohibition on using your data to train models or for any purpose beyond providing the service, and deletion on termination with certification."
+      }
+    },
+    {
+      "at": 59.16,
+      "kind": "tool_call",
+      "name": "get_rule_detail",
+      "input": {
+        "rule_id": "non_compete"
+      }
+    },
+    {
+      "at": 59.16,
+      "kind": "tool_result",
+      "name": "get_rule_detail",
+      "output": {
+        "rule_id": "non_compete",
+        "title": "Restricts who you may do business with",
+        "default_severity": "high",
+        "exposure": "You are barred from working with certain customers, in certain markets, or in certain categories \u2014 sometimes for years after this contract has already ended.",
+        "detection_guidance": "Look for non-compete, non-solicitation, and exclusivity provisions. Assess each on three axes, because a restriction is only as dangerous as its broadest dimension: SCOPE (what activity), GEOGRAPHY (where), and DURATION (for how long, including after termination).\nA non-solicitation of the counterparty's employees is normal and usually not a finding. A non-solicitation of the counterparty's CUSTOMERS, or a bar on serving an entire industry, is.\nPay attention to survival: a restriction that outlives the contract is materially worse than one that does not, and the survival clause is usually in a different section entirely.\nDo not opine on enforceability in any jurisdiction. Describe the restriction and its exposure.",
+        "recommended_redline": "Ask to narrow the restriction to the specific accounts actually served under this contract, to remove any post-termination tail beyond 12 months, and to strike any bar on serving an entire market or category."
+      }
+    },
+    {
+      "at": 59.16,
+      "kind": "tool_call",
+      "name": "get_rule_detail",
+      "input": {
+        "rule_id": "overbroad_ip_assignment"
+      }
+    },
+    {
+      "at": 59.16,
+      "kind": "tool_result",
+      "name": "get_rule_detail",
+      "output": {
+        "rule_id": "overbroad_ip_assignment",
+        "title": "You hand over more IP than you meant to",
+        "default_severity": "critical",
+        "exposure": "Work product, improvements, or even the tools and know-how you brought with you transfer to them \u2014 you could lose the right to use your own prior work.",
+        "detection_guidance": "Establish three things separately, because the danger is usually in the gap between them: what is ASSIGNED, what is LICENSED, and what is retained as background IP.\nThe finding is strongest where the assignment language sweeps in more than the deliverables: \"all work product, and all improvements, derivatives, and know-how arising therefrom\" can capture the general-purpose tooling a contractor uses across every client.\nLook specifically for the ABSENCE of a background-IP carve-out. Its absence is the finding, and like all absences it is easy to skim past.\nAlso check for feedback clauses assigning any suggestions the customer makes, and for licences that are perpetual, irrevocable, and sublicensable \u2014 which is an assignment in all but name.",
+        "recommended_redline": "Ask for the assignment to be limited to the specific deliverables, with an explicit carve-out retaining ownership of pre-existing and general-purpose IP, licensed to them only as needed to use the deliverables."
+      }
+    },
+    {
+      "at": 84.33,
+      "kind": "tool_call",
+      "name": "record_key_terms",
+      "input": {
+        "parties": [
+          "salesforce.com",
+          "You"
+        ],
+        "effective_date": "the earlier of either the date this Agreement is accepted by selecting the \u201cI Accept\u201d option presented on the screen after this Agreement is displayed or the date you begin using the Service",
+        "initial_term": "the initial period during which you are obligated to pay for the Service equal to the billing frequency selected by you during the subscription process",
+        "renewal": "Automatically renews for successive terms equal to the Initial Term, or one year if the Initial Term exceeds one year; either party must give written notice at least five (5) business days before the invoice date for the following term to stop renewal or reduce licenses.",
+        "notice_period": "At least five (5) business days before the invoice date for the following term to terminate at expiry or reduce licenses; Salesforce notice may be by Service posting, email, or mail, while your notice must be sent by confirmed fax, recognized overnight delivery, or first-class prepaid mail to the specified address.",
+        "payment_terms": "Charged annually in advance unless otherwise agreed; all payment obligations are noncancelable and amounts paid are nonrefundable.",
+        "liability_cap": "Either party\u2019s aggregate liability is capped at amounts actually paid by and/or due from you in the 12 months immediately preceding the event; the clause states no express carve-outs.",
+        "governing_law": "U.S. Customers: California law and exclusive courts in San Francisco, California. Non-U.S./Japan Customers: Swiss law and exclusive courts of Switzerland. Japanese Customers: Japanese-language agreement unless Salesforce decides otherwise.",
+        "termination_rights": "Either party may terminate only at expiration by timely written notice. Salesforce may terminate or suspend for delinquency, terminate for your breach or failure to comply, terminate Salesforce Personal Edition and free accounts at any time in its sole discretion, and terminate immediately if your change of control gives a direct competitor 50% or more ownership or control."
+      }
+    },
+    {
+      "at": 84.33,
+      "kind": "tool_result",
+      "name": "record_key_terms",
+      "output": {
+        "recorded": true
+      }
+    },
+    {
+      "at": 112.64,
+      "kind": "tool_call",
+      "name": "record_finding",
+      "input": {
+        "rule_id": "assignment_change_of_control",
+        "severity": "medium",
+        "title": "Salesforce can transfer the deal without your consent",
+        "exposure": "You cannot assign this agreement without Salesforce\u2019s approval, but Salesforce can transfer it to a parent, subsidiary, asset buyer, or merger successor without asking you. That could leave your service and Customer Data relationship in the hands of an acquirer you would not have chosen, with no matching exit right for you.",
+        "recommendation": "Ask to make assignment restrictions mutual and add a right to terminate without penalty, with a pro-rata refund and data export, if Salesforce assigns the agreement to an acquirer you reasonably object to, especially a competitor.",
+        "quoted_text": "This Agreement may not be assigned by you\nwithout the prior written approval of salesforce.com but may be assigned without your consent by salesforce.com to (i) a\nparent or subsidiary, (ii) an acquirer of assets, or (iii) a successor by merger.",
+        "confidence": "high"
+      }
+    },
+    {
+      "at": 112.64,
+      "kind": "tool_result",
+      "name": "record_finding",
+      "output": {
+        "verified": true,
+        "page": 8
+      }
+    },
+    {
+      "at": 112.64,
+      "kind": "tool_call",
+      "name": "record_finding",
+      "input": {
+        "rule_id": "auto_renewal",
+        "severity": "high",
+        "title": "The subscription auto-renews unless notice beats the invoice",
+        "exposure": "The agreement automatically rolls into another full term unless written notice arrives at least five business days before the next invoice date. Because the deadline is tied to an invoice rather than a clearly stated renewal date\u2014and your notice methods are more restrictive than Salesforce\u2019s\u2014the window is easy to miss, leaving you committed to another noncancelable, nonrefundable term.",
+        "recommendation": "Ask for renewal only by affirmative written agreement. If Salesforce refuses, ask for a clear 30-day pre-expiry cancellation window, an email renewal reminder at least 60 days before expiry, and permission to cancel by email or through the account portal.",
+        "quoted_text": "Upon the expiration of the\nInitial Term, this Agreement will automatically renew for successive renewal terms equal in duration to the Initial Term\n(or one\nyear, if the Initial Term is greater than one year) at salesforce.com\u2019s then current fees. Either party may terminate this\nAgreement or reduce the number of licenses, effective only upon the expiration of the then current License Term, by\nnotifying the other party in writing at least five (5) business days prior to the date of the invoice for the following term.",
+        "confidence": "high"
+      }
+    },
+    {
+      "at": 112.64,
+      "kind": "tool_result",
+      "name": "record_finding",
+      "output": {
+        "verified": true,
+        "page": 5
+      }
+    },
+    {
+      "at": 112.64,
+      "kind": "tool_call",
+      "name": "record_finding",
+      "input": {
+        "rule_id": "unilateral_termination",
+        "severity": "high",
+        "title": "Salesforce has broader mid-term termination rights",
+        "exposure": "Salesforce may terminate your account mid-term for any breach or other failure to comply, while the agreement gives you no matching express right to terminate mid-term if Salesforce breaches. Your payment obligations are noncancelable and prepaid amounts nonrefundable, so a disputed compliance issue can cut off service while leaving the financial commitment in place; free and Personal Edition accounts face an additional at-will termination right.",
+        "recommendation": "Ask for mutual termination rights for material breach, subject to at least 30 days\u2019 written notice and an opportunity to cure. Require a pro-rata refund of prepaid fees and a reasonable Customer Data export period if Salesforce terminates other than for an uncured material breach.",
+        "quoted_text": "Salesforce.com, in its sole discretion, may terminate your password, account or use of the Service if you breach or\notherwise fail to\ncomply with this Agreement. In addition, salesforce.com may terminate a free account at any time in its sole discretion.",
+        "confidence": "high"
+      }
+    },
+    {
+      "at": 112.64,
+      "kind": "tool_result",
+      "name": "record_finding",
+      "output": {
+        "verified": true,
+        "page": 6
+      }
+    },
+    {
+      "at": 116.38,
+      "kind": "tool_call",
+      "name": "record_key_terms",
+      "input": {
+        "parties": [
+          "salesforce.com, inc.",
+          "salesforce.com S\u00e0rl"
+        ],
+        "effective_date": "the earlier of either the date this Agreement is accepted by selecting the \u201cI Accept\u201d option presented on the screen after this Agreement is displayed or the date you begin using the Service",
+        "initial_term": "the initial period during which you are obligated to pay for the Service equal to the billing frequency selected by you during the subscription process",
+        "renewal": "Automatically renews for successive terms equal to the Initial Term (or one year if the Initial Term exceeds one year); either party must give written notice at least five (5) business days before the invoice date for the following term to prevent renewal or reduce licenses.",
+        "notice_period": "At least five (5) business days before the date of the invoice for the following term to terminate at expiry or reduce licenses.",
+        "payment_terms": "Paid annually in advance unless otherwise agreed; all payment obligations are noncancelable and amounts paid are nonrefundable; delinquent amounts bear 1.0% monthly interest plus collection expenses.",
+        "liability_cap": "Either party\u2019s aggregate liability is capped at amounts actually paid and/or due from the customer in the 12 months before the event; no express carve-outs are stated.",
+        "governing_law": "California law and exclusive San Francisco courts for U.S. Customers; Swiss law and exclusive Swiss courts for Non-U.S./Japan Customers; Japanese Customers are generally governed by the Japanese-language agreement.",
+        "termination_rights": "Either party may terminate only at the end of the current term on timely notice; salesforce.com may suspend or terminate for delinquency or customer breach, terminate free accounts at will, and terminate immediately if a customer change of control gives a direct competitor at least 50% ownership or control."
+      }
+    },
+    {
+      "at": 116.38,
+      "kind": "tool_result",
+      "name": "record_key_terms",
+      "output": {
+        "recorded": true
+      }
+    },
+    {
+      "at": 116.38,
+      "kind": "tool_call",
+      "name": "record_finding",
+      "input": {
+        "rule_id": "confidentiality_defect",
+        "severity": "high",
+        "title": "Only Salesforce\u2019s pricing gets confidentiality protection",
+        "exposure": "You must keep Salesforce\u2019s pricing confidential, but Salesforce gives no matching contractual promise to protect your confidential business information or Customer Data. Sensitive information you upload therefore lacks basic confidentiality terms, exceptions, and a defined protection period in this agreement.",
+        "recommendation": "Ask for mutual confidentiality obligations covering each party\u2019s non-public information, with standard exceptions for information already known, independently developed, public, or legally required to be disclosed; protect trade secrets for as long as they remain trade secrets and other information for at least five years.",
+        "quoted_text": "All pricing terms are confidential, and you agree not to disclose them to\nany third party.",
+        "confidence": "high"
+      }
+    },
+    {
+      "at": 116.38,
+      "kind": "tool_result",
+      "name": "record_finding",
+      "output": {
+        "verified": true,
+        "page": 4
+      }
+    },
+    {
+      "at": 116.38,
+      "kind": "tool_call",
+      "name": "record_finding",
+      "input": {
+        "rule_id": "missing_data_protection",
+        "severity": "high",
+        "title": "Customer Data has no fixed breach or processing safeguards",
+        "exposure": "The agreement has no data processing terms, breach-notification deadline, purpose limits, or subprocessor controls, while Salesforce can change its online privacy and security policies. You may learn too late about a personal-data breach to meet your own notification duties, and Salesforce also disclaims responsibility for loss or failure to store Customer Data.",
+        "recommendation": "Ask Salesforce to sign a data processing addendum that limits processing to providing the Service, controls subprocessors and international transfers, requires notice of any breach without undue delay and within 72 hours, prohibits model training or unrelated use, and requires return or deletion with certification at termination.",
+        "quoted_text": "Salesforce.com\u2019s privacy and security policies may be viewed at\nhttp://www.salesforce.com or http://www.salesforce.com/ie/ (EMEA). Salesforce.com reserves the right to modify its\nprivacy and security policies in its reasonable discretion from time to time.",
+        "confidence": "high"
+      }
+    },
+    {
+      "at": 116.38,
+      "kind": "tool_result",
+      "name": "record_finding",
+      "output": {
+        "verified": true,
+        "page": 1
+      }
+    },
+    {
+      "at": 116.38,
+      "kind": "tool_call",
+      "name": "note_absence",
+      "input": {
+        "rule_id": "non_compete",
+        "rationale": "The agreement restricts competitors from accessing or benchmarking the Service, but it does not bar you from serving customers, operating in a market, soliciting customers, or doing business with other providers."
+      }
+    },
+    {
+      "at": 116.38,
+      "kind": "tool_result",
+      "name": "note_absence",
+      "output": {
+        "recorded": true
+      }
+    },
+    {
+      "at": 116.38,
+      "kind": "tool_call",
+      "name": "record_finding",
+      "input": {
+        "rule_id": "overbroad_ip_assignment",
+        "severity": "high",
+        "title": "Salesforce takes ownership of all service-related feedback",
+        "exposure": "Any suggestion, idea, enhancement request, recommendation, or other information you provide about the Service becomes Salesforce\u2019s property, with no carve-out for your pre-existing tools or know-how. That could capture product concepts or reusable methods embedded in feedback and leave you unable to assert ownership over them.",
+        "recommendation": "Ask to replace ownership transfer with a non-exclusive license limited to using feedback to improve the Service, and expressly retain all pre-existing IP, general know-how, tools, methods, and ideas that do not disclose Salesforce confidential information.",
+        "quoted_text": "Salesforce.com alone (and its licensors, where applicable) shall own all right, title and interest, including all related\nIntellectual Property Rights, in and to the Salesforce.com Technology, the Content and the Service and any\nsuggestions, ideas, enhancement requests, feedback, recommendations or other information provided by you or any\nother party relating to the Service.",
+        "confidence": "high"
+      }
+    },
+    {
+      "at": 116.38,
+      "kind": "tool_result",
+      "name": "record_finding",
+      "output": {
+        "verified": true,
+        "page": 3
+      }
+    },
+    {
+      "at": 118.83,
+      "kind": "tool_call",
+      "name": "finalize",
+      "input": {
+        "summary": "Salesforce can cut off your account for broadly defined noncompliance while you have no matching mid-term exit, and your prepaid fees are nonrefundable. The subscription automatically renews unless your formal written notice arrives before an invoice-based deadline, and Salesforce can transfer the agreement to an acquirer without your consent or giving you a right to leave."
+      }
+    },
+    {
+      "at": 118.83,
+      "kind": "tool_result",
+      "name": "finalize",
+      "output": {
+        "complete": true
+      }
+    },
+    {
+      "at": 118.83,
+      "kind": "usage",
+      "input_tokens": 48003,
+      "cached_input_tokens": 45498,
+      "output_tokens": 1760
+    },
+    {
+      "at": 127.47,
+      "kind": "tool_call",
+      "name": "finalize",
+      "input": {
+        "summary": "Your customer and personal data has no fixed breach-notification deadline or meaningful processing safeguards, while Salesforce can change its online privacy and security policies. Salesforce also takes ownership of every service-related idea or piece of feedback you provide. You must protect Salesforce\u2019s pricing, but Salesforce gives no matching confidentiality promise for your sensitive business information."
+      }
+    },
+    {
+      "at": 127.47,
+      "kind": "tool_result",
+      "name": "finalize",
+      "output": {
+        "complete": true
+      }
+    },
+    {
+      "at": 127.47,
+      "kind": "usage",
+      "input_tokens": 36797,
+      "cached_input_tokens": 33651,
+      "output_tokens": 1961
+    },
+    {
+      "at": 138.74,
+      "kind": "tool_call",
+      "name": "record_key_terms",
+      "input": {
+        "parties": [
+          "You",
+          "salesforce.com, inc.",
+          "salesforce.com S\u00e0rl"
+        ],
+        "effective_date": "the earlier of either the date this Agreement is accepted by selecting the \u201cI Accept\u201d option presented on the screen after this Agreement is displayed or the date you begin using the Service",
+        "initial_term": "the initial period during which you are obligated to pay for the Service equal to the billing frequency selected by you during the subscription process",
+        "renewal": "Automatically renews for successive terms equal to the Initial Term, or one year if the Initial Term exceeds one year; either party must give written notice at least five (5) business days before the invoice date for the following term to terminate or reduce licenses at term-end.",
+        "notice_period": "Either party: written notice at least five (5) business days before the invoice date for the following term to terminate or reduce licenses effective at the end of the current License Term.",
+        "payment_terms": "Annually in advance unless otherwise agreed; obligations are noncancelable and payments nonrefundable; 60 days to dispute an invoice; delinquent balances accrue 1.0% per month plus collection expenses.",
+        "liability_cap": "Mutual aggregate cap equal to amounts paid and/or due in the 12 months preceding the event; the agreement states no express carve-outs from the cap.",
+        "governing_law": "U.S. Customers: California law and exclusive state/federal courts in San Francisco, California. Non-U.S./Japan Customers: Swiss law and exclusive courts of Switzerland. Japanese Customers: Japanese-language agreement unless salesforce.com decides otherwise.",
+        "termination_rights": "Either party may terminate only at the end of the current License Term with timely notice. Salesforce.com may suspend or terminate for delinquency, terminate for your breach or noncompliance, terminate free accounts at will, and terminate immediately if a competitor gains 50% control of you; Salesforce Personal Edition is terminable at salesforce.com\u2019s sole discretion."
+      }
+    },
+    {
+      "at": 138.74,
+      "kind": "tool_result",
+      "name": "record_key_terms",
+      "output": {
+        "recorded": true
+      }
+    },
+    {
+      "at": 138.74,
+      "kind": "tool_call",
+      "name": "record_finding",
+      "input": {
+        "rule_id": "payment_terms",
+        "severity": "high",
+        "title": "A changed renewal price can hit your stored card automatically",
+        "exposure": "Salesforce can auto-renew the subscription and charge your card after giving only 30 days\u2019 notice of a fee increase. Because fees are paid annually in advance, noncancelable and nonrefundable, missing the narrow exit window can lock you into the full increased annual charge.",
+        "recommendation": "Ask Salesforce to invoice renewal charges on Net-30 terms, require your written approval before charging any increased renewal price to a stored card, and make disputed amounts non-delinquent while a good-faith billing dispute is being resolved.",
+        "quoted_text": "Salesforce.com will automatically renew and bill your credit card or issue an invoice to you each year on the subsequent anniversary or as otherwise mutually agreed upon. The renewal charge will be equal to the then-current number of total User licenses times the license fee in effect during the prior term, unless salesforce.com has given you at least 30 days prior written notice of a fee increase, which shall be effective upon renewal and thereafter.",
+        "confidence": "high"
+      }
+    },
+    {
+      "at": 138.74,
+      "kind": "tool_result",
+      "name": "record_finding",
+      "output": {
+        "verified": true,
+        "page": 4
+      }
+    },
+    {
+      "at": 138.74,
+      "kind": "tool_call",
+      "name": "record_finding",
+      "input": {
+        "rule_id": "uncapped_price_escalation",
+        "severity": "high",
+        "title": "Renewal price increases have no ceiling",
+        "exposure": "Salesforce may increase fees at renewal by any amount with only 30 days\u2019 notice. The contract also auto-renews and requires non-renewal notice before the next invoice, so you may have little practical time to migrate data and replace a business-critical CRM before the higher price applies.",
+        "recommendation": "Ask for renewal increases to be capped at the lower of 3% or CPI, with at least 90 days\u2019 advance notice and a right to cancel without charge for 30 days after any increase notice.",
+        "quoted_text": "The renewal charge will be equal to the then-current number of total User licenses times the license fee in effect during the prior term, unless salesforce.com has given you at least 30 days prior written notice of a fee increase, which shall be effective upon renewal and thereafter.",
+        "confidence": "high"
+      }
+    },
+    {
+      "at": 138.74,
+      "kind": "tool_result",
+      "name": "record_finding",
+      "output": {
+        "verified": true,
+        "page": 4
+      }
+    },
+    {
+      "at": 138.74,
+      "kind": "tool_call",
+      "name": "record_finding",
+      "input": {
+        "rule_id": "unfavorable_forum",
+        "severity": "medium",
+        "title": "U.S. disputes must be litigated in San Francisco",
+        "exposure": "Every U.S. customer must bring or defend disputes in San Francisco under California law, even if based elsewhere. Travel and local-lawyer costs can exceed the value of a modest billing or service claim, making enforcement commercially impractical.",
+        "recommendation": "Ask for disputes to be heard where the defendant is located, or in a mutually neutral venue, and preserve either party\u2019s ability to bring low-value claims in its local small-claims court.",
+        "quoted_text": "With respect to U.S. Customers, this Agreement shall be governed by California law and controlling United States federal law, without regard to the choice or conflicts of law provisions of any jurisdiction, and any disputes, actions, claims or causes of action arising out of or in connection with this Agreement or the Service shall be subject to the exclusive jurisdiction of the state and federal courts located in San Francisco, California.",
+        "confidence": "high"
+      }
+    },
+    {
+      "at": 138.74,
+      "kind": "tool_result",
+      "name": "record_finding",
+      "output": {
+        "verified": true,
+        "page": 9
+      }
+    },
+    {
+      "at": 138.74,
+      "kind": "tool_call",
+      "name": "record_finding",
+      "input": {
+        "rule_id": "unilateral_amendment",
+        "severity": "high",
+        "title": "Salesforce can rewrite the deal by posting new terms",
+        "exposure": "Salesforce may change the agreement or service policies at any time merely by posting an updated version, and your continued use is treated as consent. This lets it alter important operational or commercial terms while you depend on the service, without your signature or an express right to reject the change and exit without penalty.",
+        "recommendation": "Ask that material changes to price, service scope, data handling, liability or incorporated policies require written agreement; at minimum, require 30 days\u2019 direct notice and a penalty-free termination and refund right if you reject a material change.",
+        "quoted_text": "Salesforce.com reserves the right to modify the terms and conditions of this Agreement or its policies relating to the Service at any time, effective upon posting of an updated version of this Agreement on the Service. You are responsible for regularly reviewing this Agreement. Continued use of the Service after any such changes shall constitute your consent to such changes.",
+        "confidence": "high"
+      }
+    },
+    {
+      "at": 138.74,
+      "kind": "tool_result",
+      "name": "record_finding",
+      "output": {
+        "verified": true,
+        "page": 8
+      }
+    },
+    {
+      "at": 145.47,
+      "kind": "tool_call",
+      "name": "finalize",
+      "input": {
+        "summary": "Salesforce can raise your renewal price without a ceiling, auto-renew the subscription, and charge the new amount to your card after only 30 days\u2019 notice. It can also rewrite the agreement just by posting new terms and treating continued use as acceptance. If a dispute follows, U.S. customers must fight it in San Francisco, while the annual fees are paid upfront, noncancelable, and nonrefundable."
+      }
+    },
+    {
+      "at": 145.47,
+      "kind": "tool_result",
+      "name": "finalize",
+      "output": {
+        "complete": true
+      }
+    },
+    {
+      "at": 145.47,
+      "kind": "usage",
+      "input_tokens": 37321,
+      "cached_input_tokens": 33568,
+      "output_tokens": 2663
+    }
+  ],
+  "usage": {
+    "input_tokens": 158320,
+    "cached_input_tokens": 146321,
+    "output_tokens": 7854,
+    "cost_microdollars": 368776
+  },
+  "seconds": 145.5
+}

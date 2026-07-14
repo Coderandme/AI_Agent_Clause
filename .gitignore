@@ -1,0 +1,40 @@
+# Secrets — never commit. .env holds OPENAI_API_KEY and the Hugging Face token.
+.env
+.env.*
+!.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+*.egg-info/
+dist/
+build/
+
+# Node / Next.js
+node_modules/
+.next/
+out/
+.vercel/
+
+# Local data
+*.db
+postgres-data/
+# Uploaded PDFs in development. Never commit someone's contract.
+# (Note: .gitignore has no inline comments — a trailing "# ..." becomes part of the pattern.)
+.local-storage/
+
+# Eval + demo artefacts that are generated, not authored
+evals/results/
+demo/rendered/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/extensions.json

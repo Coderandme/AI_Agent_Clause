@@ -1,0 +1,402 @@
+# Clause risk rule library — v1
+#
+# SPEC.md §4.7. Fifteen rules. This file is DATA, not code: adding a rule is a pull request that
+# touches this file and the eval fixtures, and nothing else.
+#
+# The file is hashed at boot into `analyses.rule_library_version`, so every analysis records which
+# version of this library produced it. Change a rule and old analyses remain explicable.
+#
+# Field contract:
+#   id                  stable identifier. Never reused, never renamed. It is an enum in the
+#                       record_finding tool schema and a foreign key in `findings`.
+#   family              one of LIABILITY | TERMINATION | COMMERCIAL | RIGHTS_AND_DATA.
+#                       Drives the four-pass scan (SPEC.md §4.2) — each pass shares the cached
+#                       document prefix and varies only the trailing instruction.
+#   title               short, human, shown on the finding card.
+#   default_severity    critical | high | medium | low. The agent MAY depart from this when the
+#                       specific drafting warrants it; severity is about exposure, not about how
+#                       unusual the clause is (SPEC.md §4.6, "Calibration").
+#   exposure            USER-FACING prose. Non-lawyer, one sentence, concrete. This is what a
+#                       founder reads on the card. If they can't feel it, the sentence is wrong.
+#   detection_guidance  AGENT-FACING. Returned by get_rule_detail(). What to look for, where it
+#                       hides, and what the near-misses are. Not shown to the user.
+#   recommended_redline what to ask the counterparty for. Prose, not a marked-up document —
+#                       SPEC.md §1.3 explicitly rules out generating redlines.
+#   applies_to          contract types this rule is meaningful for.
+
+version: 1
+
+families:
+  LIABILITY: Who pays when it goes wrong, and how much.
+  TERMINATION: How you get out, and what it costs to leave.
+  COMMERCIAL: Money, and who gets to change it.
+  RIGHTS_AND_DATA: What they may do with your work, your data, and your name.
+
+rules:
+  # ── LIABILITY ────────────────────────────────────────────────────────────────────────────────
+  - id: uncapped_liability
+    family: LIABILITY
+    title: No cap on your liability
+    default_severity: critical
+    exposure: >-
+      There is no ceiling on what a single mistake can cost you — one bad incident could exceed the
+      entire value of the contract, or the value of your company.
+    detection_guidance: >-
+      Look for the limitation-of-liability clause and establish whether one exists at all. Its
+      absence is itself the finding, and is easy to miss precisely because there is nothing to read.
+
+      When a cap IS present, the danger usually lives in the carve-outs, not the cap: a clause
+      capping liability at fees paid, followed by "except for breaches of confidentiality, data
+      protection, IP infringement, and indemnity obligations", may leave every realistic large loss
+      uncapped while looking protective. Read the exclusions before deciding the cap is adequate.
+
+      Cross-reference the indemnity clause. Indemnities are frequently carved out of the cap in a
+      separate section, and an uncapped indemnity is an uncapped liability wearing a different hat.
+      This interaction between distant clauses is exactly why the agent reads the whole document.
+    recommended_redline: >-
+      Ask for an aggregate cap on all liability, expressed as a multiple of fees paid in the
+      preceding twelve months. Confirm which carve-outs sit outside it and push to narrow them —
+      particularly any carve-out for indemnities.
+    applies_to: [msa, saas, services, nda, lease, license]
+
+  - id: asymmetric_liability_cap
+    family: LIABILITY
+    title: Liability cap protects them, not you
+    default_severity: high
+    exposure: >-
+      Their exposure is capped and yours is not — or theirs is capped far lower — so the same
+      failure costs you many times what it would cost them.
+    detection_guidance: >-
+      Compare the two directions explicitly. Asymmetry is often achieved through drafting rather
+      than through numbers: a cap that applies to "Provider's liability" while the customer's
+      obligations are addressed in a separate, uncapped indemnity is asymmetric even though both
+      parties appear to have a cap.
+
+      Also compare the multipliers. "Provider's liability shall not exceed fees paid in the prior
+      3 months" against a customer cap of 12 months' fees is a 4x asymmetry stated quietly.
+
+      Note the direction of the asymmetry relative to the reader. We review on behalf of the party
+      RECEIVING the contract, so a cap favouring the drafter is a finding; one favouring the reader
+      is not.
+    recommended_redline: >-
+      Ask for the cap to be mutual and set at the same multiple in both directions, with the same
+      carve-outs applying to both parties.
+    applies_to: [msa, saas, services, license]
+
+  - id: one_sided_indemnity
+    family: LIABILITY
+    title: You indemnify them, they don't indemnify you
+    default_severity: critical
+    exposure: >-
+      You would cover their legal costs and damages for claims arising from their own conduct — a
+      lawsuit they caused can become a bill you pay.
+    detection_guidance: >-
+      Identify who indemnifies whom, and for what. Look for indemnity obligations that run in one
+      direction only, or that are grossly broader in one direction.
+
+      The dangerous drafting is usually in the SCOPE, not the existence: an indemnity for "any claim
+      arising out of or relating to Customer's use of the Services" can capture claims caused
+      entirely by the provider's own defective software, because the customer's use is the proximate
+      occasion of the claim. "Arising out of or relating to" is doing enormous work in that sentence
+      and should be flagged.
+
+      Check whether the indemnity is carved out of the liability cap (see uncapped_liability). An
+      indemnity that survives the cap is where the real money is.
+
+      A mutual, narrowly-scoped IP indemnity from the vendor is normal and is NOT this finding.
+    recommended_redline: >-
+      Ask for mutual indemnities, narrowed to third-party claims caused by the indemnifying party's
+      own breach, negligence, or IP infringement — and ask for them to sit inside the liability cap.
+    applies_to: [msa, saas, services, license]
+
+  - id: missing_sla_or_remedy
+    family: LIABILITY
+    title: Performance promised, but nothing happens if they miss it
+    default_severity: medium
+    exposure: >-
+      They commit to a level of service, but there is no consequence when they fail to deliver it —
+      so the commitment is decorative.
+    detection_guidance: >-
+      A service level without a REMEDY is the finding. Look for uptime or response-time commitments
+      and then ask what happens when they are breached. If the answer is nothing, or only "Provider
+      will use commercially reasonable efforts to restore service", the SLA has no teeth.
+
+      Where service credits do exist, check whether they are the SOLE AND EXCLUSIVE remedy. That
+      phrase converts a service failure from a breach you could sue over into a small discount, and
+      it is easy to skim past.
+
+      Also check whether claiming the credit requires the customer to notice and file within a short
+      window — a remedy that expires in 10 days is a remedy most customers will never collect.
+    recommended_redline: >-
+      Ask for meaningful service credits that scale with the severity of the failure, for a
+      termination right if the SLA is missed repeatedly, and for the credits NOT to be the sole
+      remedy for a sustained outage.
+    applies_to: [saas, msa, services]
+
+  # ── TERMINATION ──────────────────────────────────────────────────────────────────────────────
+  - id: auto_renewal
+    family: TERMINATION
+    title: Renews automatically, and the exit window is easy to miss
+    default_severity: high
+    exposure: >-
+      The contract renews itself, and by the time anyone thinks to look, the window to stop it has
+      already closed — committing you to another full term you did not choose.
+    detection_guidance: >-
+      Find the renewal mechanics, then find the notice period — they are very often in DIFFERENT
+      sections, and the danger only becomes visible when you put them together. A twelve-month
+      auto-renewal is unremarkable; a twelve-month auto-renewal with a ninety-day notice window is a
+      trap, because the decision must be made nine months into a twelve-month term.
+
+      Note who may decline renewal. Sometimes only one party can.
+
+      Severity rises when the notice period is long relative to the term, when notice must be given
+      by a specific method (registered post, a named contact), or when the renewal is for a term
+      LONGER than the initial one.
+    recommended_redline: >-
+      Ask for renewal to require affirmative written consent. Failing that, ask to shorten the
+      notice period to 30 days, and to receive a renewal reminder at least 30 days before the window
+      closes.
+    applies_to: [saas, msa, services, lease, license]
+
+  - id: unilateral_termination
+    family: TERMINATION
+    title: They can walk away, you cannot
+    default_severity: high
+    exposure: >-
+      They can end the contract on short notice or for no reason at all, while you are locked in for
+      the full term — so you carry all of the commitment and none of the flexibility.
+    detection_guidance: >-
+      Compare the termination rights of each party side by side. Look specifically for termination
+      "for convenience" available to only one party, or for materially different notice periods.
+
+      Check what happens to money on termination: a right to terminate for convenience is far worse
+      when prepaid fees are non-refundable, and the two facts are usually in different sections.
+
+      Also look for termination triggers that are effectively one-sided in practice even when
+      symmetric on paper — for example a right to terminate on the other party's "insolvency or
+      material adverse change", where one party is a startup and the other is not.
+    recommended_redline: >-
+      Ask for mutual termination rights on equal notice. If they retain termination for convenience,
+      ask for a pro-rata refund of prepaid fees and a transition period to migrate off the service.
+    applies_to: [msa, saas, services, lease]
+
+  - id: assignment_change_of_control
+    family: TERMINATION
+    title: They can be acquired and the contract goes with them
+    default_severity: medium
+    exposure: >-
+      The counterparty can transfer this contract to whoever buys them — potentially your direct
+      competitor — and you have no say and no exit.
+    detection_guidance: >-
+      Find the assignment clause and establish whether it is mutual. The common pattern is that the
+      customer may not assign without consent, while the provider may freely assign "in connection
+      with a merger, acquisition, or sale of all or substantially all assets".
+
+      The finding is stronger when the contract involves confidential information, exclusive
+      commitments, or a competitor-sensitive relationship, because the identity of the counterparty
+      is then material to the deal in a way it otherwise might not be.
+
+      Check whether a change of control gives the other side a termination right but not you.
+    recommended_redline: >-
+      Ask for the assignment right to be mutual, or for a right to terminate without penalty if the
+      counterparty is acquired by a competitor.
+    applies_to: [msa, saas, services, license, lease]
+
+  # ── COMMERCIAL ───────────────────────────────────────────────────────────────────────────────
+  - id: unilateral_amendment
+    family: COMMERCIAL
+    title: They can change the terms without asking you
+    default_severity: high
+    exposure: >-
+      They can rewrite the deal — including the price and what you are actually buying — by posting
+      a new page on their website, and your continued use counts as agreement.
+    detection_guidance: >-
+      Look for language permitting one party to modify the terms, the policies, the service, or the
+      fees at its discretion, with notice by posting rather than agreement.
+
+      Critically, follow the INCORPORATION BY REFERENCE. A contract that incorporates an "Acceptable
+      Use Policy", "Service Description", or "Fee Schedule" available at a URL, and separately allows
+      that document to change at any time, has a unilateral amendment right even if the main
+      agreement never uses the word "amend". This is a two-clause interaction and it is the most
+      commonly missed instance of this rule.
+
+      Note whether continued use is deemed acceptance. That converts silence into consent.
+    recommended_redline: >-
+      Ask for material changes — to price, to scope, to any incorporated policy — to require written
+      agreement, or at minimum to trigger a right to terminate without penalty within 30 days.
+    applies_to: [saas, msa, license, services]
+
+  - id: uncapped_price_escalation
+    family: COMMERCIAL
+    title: They can raise the price at renewal without limit
+    default_severity: high
+    exposure: >-
+      Nothing constrains what they may charge at renewal — and once your business depends on the
+      service, "take it or leave it" is not really a choice.
+    detection_guidance: >-
+      Look for renewal pricing language. The absence of any constraint is the finding: silence on
+      renewal pricing means the price is whatever they say it is.
+
+      Look for weak constraints dressed as protection — "Provider may increase fees at renewal upon
+      30 days' notice" caps nothing at all, it merely tells you when.
+
+      Severity is highest where this combines with auto_renewal (the price rises AND you are already
+      locked in) and with switching costs — data migration, integration work, exclusivity. Check for
+      that interaction explicitly.
+    recommended_redline: >-
+      Ask for renewal increases to be capped — a fixed percentage, or CPI plus a small margin — and
+      for advance notice long enough to actually change vendors.
+    applies_to: [saas, msa, services, lease, license]
+
+  - id: payment_terms
+    family: COMMERCIAL
+    title: Payment terms are stacked against you
+    default_severity: medium
+    exposure: >-
+      You must pay long before you are paid, or face punitive charges for a late invoice, or have no
+      window in which to dispute a bill that is simply wrong.
+    detection_guidance: >-
+      Three distinct problems, any of which triggers this rule:
+
+      1. Long payment windows running against the reader (Net-60, Net-90) — particularly damaging
+         where the reader is the party providing services and awaiting payment.
+      2. Punitive late fees or interest. Note the rate: 1.5% per month is standard; anything
+         materially above that, or compounding, is a finding.
+      3. No dispute window, or a very short one. If invoices are "deemed accepted" after 10 days,
+         a billing error becomes unchallengeable almost immediately.
+
+      Also flag automatic payment authorisation combined with a unilateral price change right — the
+      combination means they can charge a new amount to a stored card without a conversation.
+    recommended_redline: >-
+      Ask for Net-30, interest capped at a standard commercial rate, and a dispute window of at
+      least 30 days during which disputed amounts are not deemed accepted and do not accrue interest.
+    applies_to: [msa, saas, services, license, lease]
+
+  - id: unfavorable_forum
+    family: COMMERCIAL
+    title: Disputes must be fought somewhere expensive and far away
+    default_severity: medium
+    exposure: >-
+      Any dispute must be litigated in their home jurisdiction — which can cost more to travel to
+      and argue in than the amount you are arguing about, making small claims practically unwinnable.
+    detection_guidance: >-
+      Find the governing law and the venue/forum clause; they can differ, and both matter.
+
+      Weigh the forum against the reader's location and the size of the contract. A forum clause
+      naming a distant jurisdiction is a much bigger finding on a $20k contract than on a $2M one,
+      because the cost of enforcement can exceed the value in dispute.
+
+      Look for mandatory arbitration, and read its terms: who pays the arbitrator, where it is
+      seated, and whether class actions or jury trials are waived. Mandatory arbitration in a distant
+      seat, with fees split evenly, is a de facto bar to small claims.
+
+      Do NOT opine on whether a given clause is enforceable in a given jurisdiction — SPEC.md §4.6
+      puts that out of bounds. State the exposure, not the legal conclusion.
+    recommended_redline: >-
+      Ask for a neutral venue, or for the forum to be the defendant's home jurisdiction (which
+      discourages opportunistic claims in both directions).
+    applies_to: [msa, saas, services, nda, license, lease]
+
+  # ── RIGHTS AND DATA ──────────────────────────────────────────────────────────────────────────
+  - id: overbroad_ip_assignment
+    family: RIGHTS_AND_DATA
+    title: You hand over more IP than you meant to
+    default_severity: critical
+    exposure: >-
+      Work product, improvements, or even the tools and know-how you brought with you transfer to
+      them — you could lose the right to use your own prior work.
+    detection_guidance: >-
+      Establish three things separately, because the danger is usually in the gap between them:
+      what is ASSIGNED, what is LICENSED, and what is retained as background IP.
+
+      The finding is strongest where the assignment language sweeps in more than the deliverables:
+      "all work product, and all improvements, derivatives, and know-how arising therefrom" can
+      capture the general-purpose tooling a contractor uses across every client.
+
+      Look specifically for the ABSENCE of a background-IP carve-out. Its absence is the finding, and
+      like all absences it is easy to skim past.
+
+      Also check for feedback clauses assigning any suggestions the customer makes, and for licences
+      that are perpetual, irrevocable, and sublicensable — which is an assignment in all but name.
+    recommended_redline: >-
+      Ask for the assignment to be limited to the specific deliverables, with an explicit carve-out
+      retaining ownership of pre-existing and general-purpose IP, licensed to them only as needed to
+      use the deliverables.
+    applies_to: [services, msa, license, nda]
+
+  - id: missing_data_protection
+    family: RIGHTS_AND_DATA
+    title: No real protection for the data you hand over
+    default_severity: high
+    exposure: >-
+      There is no data processing agreement, no duty to tell you about a breach, and no limit on what
+      they may do with your customers' personal data — and it is your name on the breach notice.
+    detection_guidance: >-
+      Check for the presence of: a data processing agreement or equivalent terms; a breach
+      NOTIFICATION obligation with a stated timeframe; limits on processing purposes; restrictions on
+      sub-processors; and deletion or return of data on termination.
+
+      The absence of any of these is a finding, and the absence of breach notification is the most
+      serious — without it you may not learn of a breach in time to meet your own regulatory
+      deadlines, which are typically 72 hours.
+
+      Look for language permitting the provider to use customer data to "improve the Services" or to
+      train models. That is a broad right, frequently drafted in a way that survives termination, and
+      it is often the only place where data use is described at all.
+
+      Where the contract covers personal data and says nothing about it, say so plainly.
+    recommended_redline: >-
+      Ask for a data processing agreement, breach notification within 72 hours, an express prohibition
+      on using your data to train models or for any purpose beyond providing the service, and deletion
+      on termination with certification.
+    applies_to: [saas, msa, services]
+
+  - id: confidentiality_defect
+    family: RIGHTS_AND_DATA
+    title: Confidentiality protection is defective or one-way
+    default_severity: medium
+    exposure: >-
+      Your confidential information is less protected than theirs, or protected for too short a time
+      to matter, or the obligations bind you forever in a way you cannot realistically comply with.
+    detection_guidance: >-
+      Three distinct defects, any of which triggers this rule:
+
+      1. ONE-WAY protection where the exchange is mutual — you disclose and they do not, but only
+         their information is protected.
+      2. A duration that is too SHORT for the sensitivity involved (a two-year term on trade secrets
+         effectively publishes them at the end of it), or PERPETUAL in a way that is unworkable —
+         perpetual obligations on all information, with no carve-out for information that becomes
+         public, is a compliance impossibility rather than a protection.
+      3. Missing standard EXCEPTIONS — independently developed, already known, publicly available,
+         required by law. Their absence means routine conduct can become a breach.
+
+      A mutual NDA with a 3-5 year term and standard exceptions is normal and is NOT a finding.
+    recommended_redline: >-
+      Ask for mutual obligations, a term appropriate to the sensitivity (perpetual for trade secrets,
+      3-5 years otherwise), and the four standard exceptions.
+    applies_to: [nda, msa, saas, services, license]
+
+  - id: non_compete
+    family: RIGHTS_AND_DATA
+    title: Restricts who you may do business with
+    default_severity: high
+    exposure: >-
+      You are barred from working with certain customers, in certain markets, or in certain
+      categories — sometimes for years after this contract has already ended.
+    detection_guidance: >-
+      Look for non-compete, non-solicitation, and exclusivity provisions. Assess each on three axes,
+      because a restriction is only as dangerous as its broadest dimension: SCOPE (what activity),
+      GEOGRAPHY (where), and DURATION (for how long, including after termination).
+
+      A non-solicitation of the counterparty's employees is normal and usually not a finding. A
+      non-solicitation of the counterparty's CUSTOMERS, or a bar on serving an entire industry, is.
+
+      Pay attention to survival: a restriction that outlives the contract is materially worse than one
+      that does not, and the survival clause is usually in a different section entirely.
+
+      Do not opine on enforceability in any jurisdiction. Describe the restriction and its exposure.
+    recommended_redline: >-
+      Ask to narrow the restriction to the specific accounts actually served under this contract, to
+      remove any post-termination tail beyond 12 months, and to strike any bar on serving an entire
+      market or category.
+    applies_to: [services, msa, nda, license]

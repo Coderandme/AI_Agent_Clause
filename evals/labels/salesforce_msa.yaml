@@ -1,0 +1,269 @@
+# ANSWER KEY — salesforce_msa
+#
+# Source: salesforce.com Master Subscription Agreement, filed by SolarWinds as EX-10.28.
+#         https://www.sec.gov/Archives/edgar/data/1428669/000119312508062588/dex1028.htm
+#         SolarWinds is the CUSTOMER, which is our reader's position exactly.
+#
+# ═══════════════════════════════════════════════════════════════════════════════════════════════
+# PROVENANCE — READ THIS BEFORE QUOTING ANY NUMBER DERIVED FROM THIS FILE
+#
+# This key was written by Claude, not by a human, under time pressure. That is a real limitation
+# and the README must state it, because Claude also wrote the agent being graded against it.
+#
+# The specific bias: a clause Claude is bad at spotting is also missing from this key, so it never
+# counts as a miss, and RECALL COMES OUT HIGHER THAN IT SHOULD. Treat the absolute recall figure
+# as an upper bound, not a measurement.
+#
+# What survives the bias: the MODEL-TIER SWEEP (SPEC.md §8.1). Every tier — sol, terra, luna,
+# mini, nano — is graded against this same key, so whatever error it carries is roughly constant
+# across all five columns. The COMPARISON between tiers is sound even though the absolute number
+# is soft. That is the question this key was written to answer, and it answers it honestly.
+#
+# TO FIX: Bijeeta reads the contract, corrects this file, deletes this block, and the numbers
+# become defensible in their own right. ~40 minutes.
+# ═══════════════════════════════════════════════════════════════════════════════════════════════
+#
+# 10 rules fire · 5 true negatives.
+#
+# The negatives are the interesting part. This contract has a genuinely MUTUAL liability cap with
+# no carve-outs, a genuinely mutual indemnity, and a 60-day invoice dispute window — all of which
+# are better than market. An agent that flags them anyway is inventing findings, and that is
+# exactly what precision is for.
+
+document: salesforce_msa
+labelled_by: claude          # NOT human-reviewed — see the provenance block above
+rules:
+
+  # ── LIABILITY ────────────────────────────────────────────────────────────────────────────────
+
+  # No cap on your liability
+  - rule_id: uncapped_liability
+    fires: false
+    note: |
+      TRUE NEGATIVE. Section 17 caps BOTH parties at the amounts paid or due in the preceding 12
+      months, and — unusually — states no carve-outs at all. The indemnity in Section 14 is not
+      lifted out of it. This is better than most commercial SaaS terms and the agent must not
+      flag it.
+
+  # Liability cap protects them, not you
+  - rule_id: asymmetric_liability_cap
+    fires: false
+    note: |
+      TRUE NEGATIVE. The Section 17 cap is expressed as "EITHER PARTY'S AGGREGATE LIABILITY" and
+      is the same figure in both directions. Genuinely symmetric.
+
+  # You indemnify them, they don't indemnify you
+  - rule_id: one_sided_indemnity
+    fires: false
+    unsure: true
+    note: |
+      TRUE NEGATIVE, but the closest call in this document. Section 14 is titled "Mutual
+      Indemnification" and both directions genuinely exist. Salesforce's IP indemnity is narrower
+      than the customer's obligation — it covers only copyright, trademark, and "a U.S. patent
+      issued as of the Effective Date", which excludes every patent granted afterwards — and there
+      is a carve-out where the Service is combined with the customer's own products. A reviewer
+      could reasonably fire this rule on that asymmetry of SCOPE. I am marking it false because
+      the rule is about a one-directional indemnity, and this one runs both ways.
+
+  # Performance promised, but nothing happens if they miss it
+  - rule_id: missing_sla_or_remedy
+    fires: true
+    severity: medium
+    clause: |
+      Salesforce.com represents and warrants that it will provide the Service in a manner
+      consistent with general industry standards reasonably applicable to the provision thereof
+      and that the Service will perform substantially in accordance with the online salesforce.com
+      help documentation under normal use and circumstances.
+    note: |
+      Section 13 promises performance. Nothing in the contract says what happens when it is not
+      delivered: there is no uptime commitment, no service credits, and no termination right for
+      sustained failure. Section 15 then disclaims all warranties and puts the Service on an
+      "AS IS" basis, and Section 16 disclaims responsibility for internet delays. The promise is
+      decorative.
+
+  # ── TERMINATION ──────────────────────────────────────────────────────────────────────────────
+
+  # Renews automatically, and the exit window is easy to miss
+  - rule_id: auto_renewal
+    fires: true
+    severity: high
+    clause: |
+      Upon the expiration of the Initial Term, this Agreement will automatically renew for
+      successive renewal terms equal in duration to the Initial Term (or one year, if the Initial
+      Term is greater than one year) at salesforce.com's then current fees.
+    note: |
+      Renews itself, at whatever the price then is, and Section 9 bills the credit card on file
+      automatically. The exit window is narrow and oddly placed: Section 11 requires written
+      notice "at least five (5) business days prior to the date of the invoice for the following
+      term" — so the customer must act in a five-day window pegged to an invoice date, not to the
+      term end.
+
+  # They can walk away, you cannot
+  - rule_id: unilateral_termination
+    fires: true
+    severity: high
+    clause: |
+      Salesforce.com, in its sole discretion, may terminate your password, account or use of the
+      Service if you breach or otherwise fail to comply with this Agreement.
+    note: |
+      The asymmetry only becomes visible across three sections. Section 12 lets Salesforce
+      terminate at its sole discretion for any breach, and deems non-payment a material breach.
+      The customer has NO corresponding right to terminate mid-term for Salesforce's breach —
+      Section 11 lets them exit only at the end of a term. And Section 7 makes all payment
+      obligations "noncancelable" and all amounts "nonrefundable", while Section 10 says that on
+      termination the customer still owes the balance of the account. So: they can cut you off,
+      and you still pay.
+
+  # They can be acquired and the contract goes with them
+  - rule_id: assignment_change_of_control
+    fires: true
+    severity: medium
+    clause: |
+      This Agreement may not be assigned by you without the prior written approval of
+      salesforce.com but may be assigned without your consent by salesforce.com to (i) a parent or
+      subsidiary, (ii) an acquirer of assets, or (iii) a successor by merger.
+    note: |
+      Textbook asymmetry, and it cuts the other way too: Section 22 also lets Salesforce terminate
+      for cause immediately if the CUSTOMER undergoes a change of control that puts a Salesforce
+      competitor in 50% ownership. So they may be freely acquired; the customer may not be.
+
+  # ── COMMERCIAL ───────────────────────────────────────────────────────────────────────────────
+
+  # They can change the terms without asking you
+  - rule_id: unilateral_amendment
+    fires: true
+    severity: high
+    clause: |
+      Salesforce.com reserves the right to modify the terms and conditions of this Agreement or
+      its policies relating to the Service at any time, effective upon posting of an updated
+      version of this Agreement on the Service. You are responsible for regularly reviewing this
+      Agreement. Continued use of the Service after any such changes shall constitute your consent
+      to such changes.
+    note: |
+      About as strong an instance of this rule as exists. Effective on POSTING — no notice period
+      at all, not even an email. Continued use is deemed consent. The customer is made responsible
+      for "regularly reviewing" the contract they already signed. The definitions section
+      reinforces it: the Agreement includes website materials "as such materials, including the
+      terms of this Agreement, may be updated by salesforce.com from time to time in its sole
+      discretion".
+
+  # They can raise the price at renewal without limit
+  - rule_id: uncapped_price_escalation
+    fires: true
+    severity: high
+    clause: |
+      Salesforce.com reserves the right to modify its fees and charges and to introduce new
+      charges at any time, upon at least 30 days prior notice to you, which notice may be provided
+      by e-mail.
+    note: |
+      Nothing caps the increase — no percentage ceiling, no CPI link. Thirty days' notice tells you
+      WHEN, not HOW MUCH. Combined with the automatic renewal in Section 11 ("at salesforce.com's
+      then current fees") and the automatic credit-card charge in Section 9, the price can rise
+      without limit and be collected without a further conversation.
+
+  # Disputes must be fought somewhere expensive and far away
+  - rule_id: unfavorable_forum
+    fires: true
+    severity: medium
+    clause: |
+      any disputes, actions, claims or causes of action arising out of or in connection with this
+      Agreement or the Service shall be subject to the exclusive jurisdiction of the state and
+      federal courts located in San Francisco, California.
+    note: |
+      Exclusive jurisdiction in the vendor's home city. SolarWinds is in Austin. For non-US
+      customers Section 23 is harsher still — exclusive jurisdiction of the courts of Switzerland.
+      Severity is medium rather than high because these are ordinary courts, not a cost-shifted
+      arbitration, and the customer here is large enough to litigate.
+
+  # Payment terms are stacked against you
+  - rule_id: payment_terms
+    fires: false
+    unsure: true
+    note: |
+      DISPUTED — EXCLUDED FROM THE METRICS. This label is almost certainly WRONG, and the way we
+      found that out is the most useful thing the eval harness has produced so far.
+
+      I originally marked this a clean true negative. My reasoning: late interest is 1.0% per month
+      (below the 1.5% that is standard, so not punitive), the invoice dispute window is SIXTY days
+      (generous), and payment runs from customer to vendor so there is no "paid late" exposure.
+      None of the three defects in the rule's detection_guidance are present.
+
+      Then the sweep ran, and ALL FIVE MODELS — sol, terra, luna, mini, nano — fired payment_terms
+      on this contract, independently, at every tier. Every one of them cited the same thing:
+      Section 7 makes fees annual, in advance, "noncancelable" and "nonrefundable", and obliges the
+      customer to pay for licenses "whether or not such User licenses are actively used".
+
+      When five independent models unanimously disagree with the answer key, the overwhelmingly
+      likely explanation is that THE ANSWER KEY IS WRONG. And on the merits, they have a point:
+      prepaid-and-unrecoverable IS a payment term stacked against the customer. My rule's
+      detection_guidance simply does not enumerate that case, and I read the rule too literally.
+
+      The correct fix is NOT to flip this label to `true` — that would be changing the exam to
+      agree with the student, and it would contaminate exactly the independence the key exists to
+      provide. The correct fix is to SHARPEN rules/v1.yaml so the rule says plainly whether
+      prepaid, nonrefundable, use-it-or-lose-it fees are in scope, then re-label and re-run.
+
+      Until that happens, this rule is excluded from precision and recall. Every tier was being
+      penalised for a finding that is probably correct.
+
+  # ── RIGHTS AND DATA ──────────────────────────────────────────────────────────────────────────
+
+  # You hand over more IP than you meant to
+  - rule_id: overbroad_ip_assignment
+    fires: true
+    severity: medium
+    clause: |
+      Salesforce.com alone (and its licensors, where applicable) shall own all right, title and
+      interest, including all related Intellectual Property Rights, in and to the Salesforce.com
+      Technology, the Content and the Service and any suggestions, ideas, enhancement requests,
+      feedback, recommendations or other information provided by you or any other party relating
+      to the Service.
+    note: |
+      Section 5 assigns outright — not licenses — every suggestion, idea, or piece of feedback the
+      customer ever gives about the Service. Severity is medium rather than the rule's default of
+      critical because the scope is confined to feedback ABOUT their product; it does not reach the
+      customer's own work product or background IP, which is what would make it critical.
+
+  # No real protection for the data you hand over
+  - rule_id: missing_data_protection
+    fires: true
+    severity: high
+    clause: |
+      You, not salesforce.com, shall have sole responsibility for the accuracy, quality, integrity,
+      legality, reliability, appropriateness, and intellectual property ownership or right to use
+      of all Customer Data, and salesforce.com shall not be responsible or liable for the deletion,
+      correction, destruction, damage, loss or failure to store any Customer Data.
+    note: |
+      There is no DPA, no processing limits, and no sub-processor restrictions. Critically, there
+      is no BREACH NOTIFICATION duty running from Salesforce to the customer — Section 3 obliges
+      the CUSTOMER to notify Salesforce of a security breach, and nothing runs the other way. The
+      privacy policy is incorporated by reference and Section 1 lets Salesforce modify it "in its
+      reasonable discretion". Section 10 permits Customer Data to be "irretrievably deleted" once
+      an account is 30 days delinquent.
+
+  # Confidentiality protection is defective or one-way
+  - rule_id: confidentiality_defect
+    fires: true
+    severity: medium
+    clause: |
+      All pricing terms are confidential, and you agree not to disclose them to any third party.
+    note: |
+      The finding here is an ABSENCE, which is why it is easy to miss: there is no confidentiality
+      section in this contract at all. The single confidentiality obligation in the whole document
+      is this one — and it runs ONE WAY, binding the customer to keep the vendor's pricing secret.
+      Nothing obliges Salesforce to protect the customer's confidential information. No mutual
+      obligations, no term, no standard exceptions.
+
+  # Restricts who you may do business with
+  - rule_id: non_compete
+    fires: false
+    note: |
+      TRUE NEGATIVE. Section 2 bars a direct competitor of Salesforce from using the Service, bars
+      benchmarking, and bars reverse-engineering to build a competing product. Those are USE
+      restrictions on the vendor's own product — standard, and not what this rule is about. There
+      is no non-solicitation of customers, no exclusivity, no market or category restriction, and
+      no post-termination tail. The customer's freedom to do business with anyone is untouched.
+
+      The nearest thing to a business restriction — Section 22's right to terminate if a Salesforce
+      competitor acquires 50% of the customer — is captured under assignment_change_of_control and
+      should not be double-counted here.

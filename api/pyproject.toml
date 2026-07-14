@@ -1,0 +1,61 @@
+[project]
+name = "clause"
+version = "0.1.0"
+description = "Contract intelligence agent — risk flagging with verified quotations"
+requires-python = ">=3.12"
+
+dependencies = [
+    "fastapi>=0.115",
+    "uvicorn[standard]>=0.32",
+    "pydantic>=2.9",
+    "pydantic-settings>=2.6",
+    "asyncpg>=0.30",
+    "openai>=1.60",
+    "pymupdf>=1.24",          # parse + per-character offsets. The highlight overlay depends on these.
+    "rapidfuzz>=3.10",        # quote verification fallback (SPEC.md §4.5)
+    "pyyaml>=6.0",            # the rule library is data, not code
+    "python-multipart>=0.0.12",
+    "boto3>=1.35",            # Cloudflare R2 (S3-compatible)
+    "jinja2>=3.1",            # memo templates
+    "gradio>=6.20.0",
+]
+
+[project.optional-dependencies]
+# V2. Kept out of the default install so V1's container stays small and the ONNX runtime is not on
+# the critical path — the risk scan does not retrieve (SPEC.md §4.1).
+retrieval = [
+    "fastembed>=0.4",
+]
+dev = [
+    "pytest>=8.3",
+    "pytest-asyncio>=0.24",
+    "ruff>=0.8",
+    "mypy>=1.13",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]
+
+[tool.ruff.lint.per-file-ignores]
+# The system prompt is prose written for a model to read, not code. Its lines are long because
+# rewrapping them would change the bytes — and the bytes of this file ARE the cached prefix.
+"clause/agent/prompts.py" = ["E501"]
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["clause"]
