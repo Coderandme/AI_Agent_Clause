@@ -26,8 +26,17 @@ a finding — while you watch. It takes about a minute and it does not ask you a
 > The UI is an interim **Gradio** app — the dense Next.js frontend in [SPEC.md](SPEC.md) §9 does not
 > exist yet, and neither do the job queue, the memo, or the Q&A tab. See [ROADMAP.md](ROADMAP.md).
 
-**Try it** — two contracts are pre-analysed and replay instantly at zero cost, agent trace and all.
-You can also upload your own. See [DEPLOY.md](DEPLOY.md).
+**Run it yourself** — two contracts ship pre-analysed and replay instantly at zero cost, agent trace
+and all, so the demo works without an API key:
+
+```bash
+cd api && uv sync --extra dev
+cd .. && uv run --project api python app.py     # http://localhost:7860
+```
+
+A hosted Gradio demo is configured and ready ([DEPLOY.md](DEPLOY.md)) but is not currently up — the
+free Hugging Face CPU tier allows one running Space per account, and that slot is in use. The app,
+the Dockerfile, and the spend caps all work; it is a quota, not a bug.
 
 ---
 
@@ -304,8 +313,8 @@ uv run pytest
 | ✅ | Full schema on Neon: pgvector, HNSW index, job queue, usage ledger |
 | ✅ | Demo mode — both contracts pre-analysed, real traces, **$0.00 per view** |
 | ✅ | Spend caps: two-pool budget, per-IP and per-session limits, hard ceiling |
-| ✅ | Deployed: one container, Hugging Face Spaces + Neon, **$0 infrastructure** |
-| 🟡 | UI — interim **Gradio** app. The Next.js frontend in SPEC.md §9 is not built. |
+| ✅ | Deployable: one container, Gradio + Neon, **$0 infrastructure**. Not currently hosted — free-tier quota, not a defect. |
+| 🟡 | UI — interim **Gradio** app, runs locally. The Next.js frontend in SPEC.md §9 is not built. |
 | ⬜ | Job queue worker, `agent_events`, SSE streaming trace (the trace currently replays, not streams) |
 | ⬜ | Memo generation, Q&A tab, retrieval, span-precise PDF highlighting |
 
