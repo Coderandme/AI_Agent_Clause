@@ -9,7 +9,7 @@ python_version: '3.12'
 app_file: app.py
 pinned: false
 license: mit
-short_description: An agent that reads your contract and proves every quote it shows is real
+short_description: Contract risk agent with verified quotations
 ---
 
 # Clause — Contract Intelligence Agent
