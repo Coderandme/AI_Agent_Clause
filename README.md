@@ -3,11 +3,13 @@ title: Clause
 emoji: 📄
 colorFrom: gray
 colorTo: blue
-sdk: docker
-app_port: 7860
+sdk: gradio
+sdk_version: 6.20.0
+python_version: '3.12'
+app_file: app.py
 pinned: false
 license: mit
-short_description: An agent that reads your contract and proves every quote it shows you is real
+short_description: An agent that reads your contract and proves every quote it shows is real
 ---
 
 # Clause — Contract Intelligence Agent
