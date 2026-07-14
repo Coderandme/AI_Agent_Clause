@@ -1,3 +1,15 @@
+---
+title: Clause
+emoji: 📄
+colorFrom: gray
+colorTo: blue
+sdk: docker
+app_port: 7860
+pinned: false
+license: mit
+short_description: An agent that reads your contract and proves every quote it shows you is real
+---
+
 # Clause — Contract Intelligence Agent
 
 An agent that reads a commercial contract, flags the risks, and **proves every quotation it shows
