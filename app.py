@@ -168,21 +168,77 @@ def show_demo(slug: str) -> tuple[str, str, str, str, str]:
 
 # ── live analysis ────────────────────────────────────────────────────────────────────────────────
 
+PRIVATE_PREFIXES = ("10.", "127.", "172.16.", "172.17.", "192.168.", "::1", "fc", "fd")
+
+
+def client_ip(request: gr.Request | None) -> str:
+    """The visitor's IP, for the per-IP daily cap.
+
+    Behind Hugging Face's proxy, `request.client.host` is the PROXY, not the visitor — so every
+    visitor looks like the same person and the per-IP cap silently applies to all of them at once
+    (or, worse, to none of them). The real address arrives in `X-Forwarded-For`.
+
+    XFF is a comma-separated chain, appended to by each proxy it passes through:
+
+        X-Forwarded-For: <client>, <proxy-1>, <proxy-2>
+
+    We take the LAST entry that is not a private address, not the first. The first is the one a
+    client can forge — anyone can send their own `X-Forwarded-For: 1.2.3.4` header and the proxies
+    will simply append to it, so trusting the leftmost value means trusting the attacker. The
+    rightmost public entry was written by infrastructure we do not control but do at least trust
+    more than the caller.
+
+    This is defence in depth, not a wall. XFF can still be gamed, and IP rotation is cheap. The cap
+    that actually bounds the damage is the $2 anonymous spend pool in guard.py — this one just
+    makes casual abuse annoying, and stops one visitor consuming the whole month in an afternoon.
+    """
+    if request is None:
+        return "unknown"
+
+    forwarded = request.headers.get("x-forwarded-for", "")
+    candidates = [ip.strip() for ip in forwarded.split(",") if ip.strip()]
+    for ip in reversed(candidates):
+        if not ip.lower().startswith(PRIVATE_PREFIXES):
+            return ip
+
+    if request.client and request.client.host:
+        return request.client.host
+    return "unknown"
+
 
 async def analyse_upload(
-    file: Any, access_code: str, state: dict[str, Any]
+    file: Any,
+    access_code: str,
+    state: dict[str, Any],
+    request: gr.Request,
 ) -> tuple[str, str, str, str]:
     if file is None:
         return "Upload a PDF first.", "", "", ""
 
-    data = Path(file).read_bytes()
+    s = settings()
+    path = Path(file)
+
+    # Size is checked BEFORE the bytes are read, not after. An uploaded PDF is untrusted input, and
+    # `read_bytes()` on a 200 MB file would put 200 MB in this container's memory before any limit
+    # had a chance to reject it — on a free tier, that is how the Space falls over.
+    size = path.stat().st_size
+    if size > s.max_upload_bytes:
+        return (
+            f"That file is {size / 1_048_576:.1f} MB. The limit is "
+            f"{s.max_upload_bytes / 1_048_576:.0f} MB.",
+            "",
+            "",
+            "",
+        )
+
+    data = path.read_bytes()
 
     p = await pool.pool()
     async with p.acquire() as conn:
         # Checked BEFORE the money is spent, never after — see guard.py.
         decision = await guard.may_analyse(
             conn,
-            ip="gradio",  # HF Spaces does not expose the client IP to the app; session cap carries it
+            ip=client_ip(request),
             access_code=access_code,
             session_uploads=state.get("uploads", 0),
         )
@@ -203,9 +259,19 @@ async def analyse_upload(
             "",
             "",
         )
-    if doc.page_count > settings().max_pages:
+
+    # Anonymous visitors get a tighter page limit than code holders. Pages are tokens and tokens are
+    # money: a 40-page contract costs several times what a 15-page one does, and the anonymous pool
+    # is small. Code holders — people the author actually invited — get the full limit.
+    page_limit = s.max_pages if decision.pool == "reserved" else s.max_pages_anonymous
+    if doc.page_count > page_limit:
+        extra = (
+            ""
+            if decision.pool == "reserved"
+            else " Enter an access code above for the full 40-page limit."
+        )
         return (
-            f"That document is {doc.page_count} pages. The limit is {settings().max_pages}.",
+            f"That document is {doc.page_count} pages. The limit is {page_limit}.{extra}",
             "",
             "",
             "",
@@ -350,15 +416,20 @@ with gr.Blocks(title="Clause — contract intelligence") as app:
 
     with gr.Tab("Analyse your own"):
         gr.Markdown(
-            "**Your file is never stored.** It is parsed in memory and discarded.\n\n"
-            "Anonymous visitors get **one** analysis, drawn from a small shared budget — this "
-            "costs the author real money and a public URL attracts bots. With an access code you "
-            "get full use, from a separate reserve that strangers cannot drain."
+            "**Your file is never stored.** It is parsed in memory and discarded when the request "
+            "ends — nothing is written to disk, and nothing reaches the database but a cost "
+            "figure.\n\n"
+            "Every analysis costs the author real money, and a public URL attracts bots. So:\n\n"
+            "| | anonymous | with an access code |\n"
+            "|---|---|---|\n"
+            "| analyses | 1 per session · 3 per day per IP | unlimited |\n"
+            "| page limit | 15 | 40 |\n"
+            "| budget | a small shared pool | a separate reserve strangers cannot drain |\n\n"
+            "The **sample contracts** on the other tab are unlimited and free — pre-computed, with "
+            "no API calls at all."
         )
         with gr.Row():
-            upload = gr.File(
-                label="Contract (PDF, up to 40 pages)", file_types=[".pdf"]
-            )
+            upload = gr.File(label="Contract (PDF, max 10 MB)", file_types=[".pdf"])
             code = gr.Textbox(
                 label="Access code (optional)",
                 placeholder="leave blank for the anonymous allowance",

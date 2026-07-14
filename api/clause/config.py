@@ -33,6 +33,12 @@ class Settings(BaseSettings):
     # SPEC.md §7.2 and clause/guard.py. Abuse limits on a public URL.
     max_upload_bytes: int = 10 * 1024 * 1024  # 10 MB
     max_pages: int = 40
+
+    # Anonymous visitors get a tighter page limit, because pages are tokens and tokens are money.
+    # A 40-page contract costs several times what a 15-page one does, and the anonymous pool is
+    # small. People the author actually invited get the full limit.
+    max_pages_anonymous: int = 15
+
     max_analyses_per_ip_per_day: int = 3
     # Anonymous visitors only. Access-code holders are not limited per session.
     max_uploads_per_session: int = 1
