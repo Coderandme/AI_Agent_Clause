@@ -1,7 +1,7 @@
 # Clause — Contract Intelligence Agent
 
 **Specification & Implementation Plan**
-Version 1.0 · 2026-07-10 · Status: Approved for build
+Version 1.3 · 2026-07-15 · Status: Approved for build
 
 This document is the single source of truth for the project. Any change to scope, architecture, or interface lands here first.
 
@@ -32,7 +32,11 @@ It is a portfolio artifact whose primary job is to convert a prospective client'
 
 ### 1.3 Explicit non-goals
 
-Not a legal-advice product. Not multi-tenant SaaS with billing. No user accounts in v1. No contract editing or redline generation (we *recommend* redlines in prose; we do not produce a marked-up document). No jurisdiction-specific legal reasoning beyond what the rule library encodes. No cross-document comparison in v1 — the schema anticipates it, the UI does not ship it.
+Not a legal-advice product. No contract editing or redline generation (we *recommend* redlines in prose; we do not produce a marked-up document). No jurisdiction-specific legal reasoning beyond what the rule library encodes. No cross-document comparison in v1 — the schema anticipates it, the UI does not ship it.
+
+**No self-serve tier and no payments.** There is no public "free plan" and no Upgrade page. Running the agent on your own contract is **invite-only**: access is granted with a code, not bought (§2.5). Strangers get the public demo, which is free and needs no account. Stripe and paid plans are a *"beyond V3"* concern, only relevant if this ever becomes a real SaaS — which is not what it is.
+
+> **Scope note (v1.3).** This spec originally listed "no user accounts" and "no billing" as non-goals. On 2026-07-15 that was reconsidered twice. First (v1.2): accounts and JWT login were added, so a prospective client could keep an analysis. Then (v1.3), on the observation that this is a **portfolio tool shown to a handful of prospects, not a public SaaS**, the self-serve free tier and the Upgrade/Stripe flow were *removed* and access made **invite-only via access codes** (§2.5). Accounts and JWT stay — they are the point of the login page as a portfolio artifact and the mechanism that gates spend. This document describes the finished product; **`ROADMAP.md` sequences what actually ships in each version, and defers the eval harness, memo, and Q&A out of the MVP.**
 
 ### 1.4 Standing constraint: cost
 
@@ -65,12 +69,15 @@ Plus a supporting capability: **grounded Q&A** over the document, so a user can 
 ### 2.3 Core user flow
 
 ```
-Landing page
+Landing page  (no login required)
   ├── [Primary] Click a pre-indexed sample contract
   │     └── Instant load of cached analysis → full UI, zero cost, zero latency
+  │         (served from static precomputed data — no backend, no account)
   │
   └── [Secondary] Drag a PDF onto the dropzone
-        ├── Validation (type, size, page count, rate limit, spend cap)
+        ├── Not logged in? → prompt to log in, or sign up with an access code (§2.5)
+        ├── Logged in but grant spent? → "you've used your N analyses; contact the author"
+        ├── Validation (type, size, page count, spend cap)
         ├── Parse → chunk → embed  (~3s, all local)
         ├── Agent analysis, streamed live  (~40-70s)
         │     └── User watches the agent trace: tools called, findings recorded
@@ -96,6 +103,28 @@ Persistent, unmissable, on every page and in the memo footer:
 
 Non-negotiable. Present before the first analysis renders, not buried in a footer link.
 
+### 2.5 Accounts and access control
+
+This is a portfolio tool shown to a handful of prospects, not a public SaaS. So the demo is open to everyone and running the agent on your own contract is **invite-only.** Accounts exist to gate the one expensive action — a real upload — and to demonstrate a genuine auth implementation.
+
+**Tiers.**
+
+| Tier | Who | How they get it | What they can do |
+| --- | --- | --- | --- |
+| Anonymous | Anyone | — | View demo contracts (static, $0). No account, no upload. |
+| Invited client | A prospect you chose | Signs up with an **access code** you gave them | Uploads and analyses, up to the **grant** the code carried (e.g. 3). |
+| Admin | The author | `is_admin` flag set by hand in the DB | Unlimited uploads, drawn from a budget reserve strangers cannot touch. |
+
+**No self-serve free tier.** A stranger cannot sign up and spend API budget; there is nothing to sign up *for* without a code. This — not a per-IP counter — is the primary spend control: the set of people who can cost money is exactly the set of people you handed a code.
+
+**Access codes.** A code is a coupon for access, not money. Each code carries a grant (how many analyses it unlocks) and is single-use — one code, one client — so clients are distinguishable and individually revocable. At signup the server checks the code is valid and unclaimed, creates the account with `upload_grant` set from the code, and marks the code claimed. An invalid or spent code fails the signup. (`access_codes` table, §5.)
+
+**The grant is a lifetime count.** An invited client gets `upload_grant` analyses of their own documents, total. The check before an analysis runs is `is_admin OR COUNT(analyses WHERE owner_user_id = $1) < upload_grant`. When the grant is spent, the UI says so plainly — "you've used your N analyses; contact the author for more." There is no Upgrade page and no payment path; access is a conversation with you, not a checkout.
+
+**Auth mechanism.** Email + password, hashed with `bcrypt`. Signup requires a valid access code; login issues a **JWT** — a signed token carrying the user id and admin flag — which the SPA stores and sends as a `Bearer` header on every request. The API verifies the signature per call; there is no server-side session store. Tokens are short-lived; a refresh path is a later concern.
+
+The global monthly ceiling (§7.2) still stands behind all of this as the ultimate backstop: even the sum of every grant cannot exceed it.
+
 ---
 
 
@@ -109,9 +138,10 @@ Non-negotiable. Present before the first analysis renders, not buried in a foote
 
 | Layer          | Choice                                                                         | Rationale                                                                                                                 |
 | -------------- | ------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------- |
-| Frontend       | Next.js 15 (App Router), TypeScript, Tailwind, shadcn/ui                       | Server components for the document shell, client components for the interactive panes. Vercel deploy is free and instant. |
+| Frontend       | Vite + React 19, TypeScript, Tailwind                                          | A plain single-page app that talks to FastAPI over HTTP. One frontend, one API, no server-side rendering to reason about. (The spec originally named Next.js; simplified to a Vite SPA in v1.2 — see §9.) |
 | PDF rendering  | `react-pdf` (pdf.js) with a custom highlight overlay                           | Needs to accept a character range and paint it. Text-layer coordinates come from pdf.js.                                  |
 | Backend        | FastAPI, Python 3.12, `uv` for dependency management                           | Async-native, matches the streaming and job-queue shape.                                                                  |
+| Auth           | FastAPI + Pydantic, `bcrypt` password hashing, JWT bearer tokens               | Stateless: the token carries the user id and admin flag, verified per request. No session store. See §2.5.               |
 | LLM            | OpenAI API, tiered by task                                                     | See §3.2.                                                                                                                 |
 | Embeddings     | `fastembed` + `BAAI/bge-small-en-v1.5` (384-dim), local                        | See §3.3.                                                                                                                 |
 | Database       | Postgres 16 + `pgvector` + native full-text search                             | One datastore for documents, chunks, embeddings, findings, jobs, and usage. See §3.4.                                     |
@@ -475,6 +505,22 @@ Rules are grouped into four **families** for the multi-pass scan: `LIABILITY`, `
 ```sql
 CREATE EXTENSION IF NOT EXISTS vector;
 
+CREATE TABLE users (
+  id              uuid PRIMARY KEY,
+  email           text NOT NULL UNIQUE,
+  password_hash   text NOT NULL,          -- bcrypt
+  is_admin        bool NOT NULL DEFAULT false,
+  upload_grant    int  NOT NULL DEFAULT 0, -- lifetime analyses allowed; admin ignores it
+  created_at      timestamptz NOT NULL DEFAULT now()
+);
+
+CREATE TABLE access_codes (              -- invite codes; a coupon for access, not money
+  code            text PRIMARY KEY,
+  grant_count     int  NOT NULL,          -- analyses this code unlocks (→ users.upload_grant)
+  claimed_by      uuid REFERENCES users,  -- NULL until a signup consumes it; single-use
+  created_at      timestamptz NOT NULL DEFAULT now()
+);
+
 CREATE TABLE documents (
   id              uuid PRIMARY KEY,
   sha256          text NOT NULL,
@@ -484,11 +530,14 @@ CREATE TABLE documents (
   char_count      int  NOT NULL,
   is_scanned      bool NOT NULL DEFAULT false,
   storage_key     text NOT NULL,          -- object storage; PDFs are never in Postgres
-  owner_session   text,                   -- anonymous cookie; NULL for demo docs
+  owner_user_id   uuid REFERENCES users,  -- who uploaded it; NULL for demo docs
   created_at      timestamptz NOT NULL DEFAULT now(),
   expires_at      timestamptz,            -- uploads: now() + 24h. demo: NULL.
   UNIQUE (sha256, source)
 );
+
+-- The cap is a count over this owner: a non-admin user may run up to
+-- users.upload_grant analyses, checked before an analysis runs (§2.5).
 
 CREATE TABLE pages (
   document_id     uuid REFERENCES documents ON DELETE CASCADE,
@@ -668,7 +717,7 @@ worker
 
 ## 7. Cost, abuse, and the public demo
 
-The application is on a public URL with anonymous uploads. Strangers will spend the author's API budget. Three layers stand between them and it.
+The application is on a public URL with a real API key behind it. Since v1.3 the answer is not to meter strangers but to exclude them from the expensive path entirely: the demo is free and costs nothing to serve, and analysing your own contract is **invite-only** (§2.5). Anonymous visitors cannot spend anything, because there is no anonymous upload path at all.
 
 ### 7.1 Demo mode is the default path
 
@@ -676,17 +725,19 @@ Four pre-indexed sample contracts — a SaaS MSA, a mutual NDA, a commercial off
 
 Clicking one costs **zero API calls** and renders instantly, trace replay and all. This is the primary call to action on the landing page. Most visitors will never upload anything, and they will still see the product work.
 
-### 7.2 Uploads are capped, three ways
+### 7.2 Uploads are capped
 
+Since v1.3 the **first** cap is the invite gate in §2.5: you cannot upload without an account, and you cannot get an account without an access code you were handed. The set of people who can spend API budget is exactly the set of people you invited — there is no anonymous upload path to abuse. The remaining layers stand behind it:
 
-| Layer            | Limit                            | Behaviour on breach                                                    |
-| ---------------- | -------------------------------- | ---------------------------------------------------------------------- |
-| Per document     | 10 MB, 40 pages                  | 400 with a specific message                                            |
-| Per IP per day   | 3 analyses                       | 429, with a pointer to demo mode                                       |
-| Global per month | Hard spend ceiling, configurable | Uploads disabled; the site degrades to demo-only with an honest banner |
+| Layer            | Limit                                   | Behaviour on breach                                                    |
+| ---------------- | --------------------------------------- | ---------------------------------------------------------------------- |
+| Per account      | `upload_grant` analyses; admin = ∞      | Inline "grant spent, contact the author" (§2.5). No checkout.          |
+| Per document     | 10 MB, 40 pages                         | 400 with a specific message                                            |
+| Global per month | Hard spend ceiling, configurable        | Uploads disabled; the site degrades to demo-only with an honest banner |
 
+Because signup itself requires a code, the per-IP daily counter that guarded an anonymous upload path is no longer load-bearing and is not in the MVP.
 
-The global ceiling is checked *before* the job is enqueued, against `SUM(cost_microdollars)` over the current month in `usage_ledger`. IPs are stored only as `HMAC(ip, secret)`.
+The global ceiling is checked *before* the analysis runs, against `SUM(cost_microdollars)` over the current month in `usage_ledger`.
 
 Uploaded documents and their derived rows are deleted 24 hours after upload by a scheduled job. This is stated on the upload dropzone, because a person about to hand a contract to a stranger's website wants to read exactly that sentence.
 
@@ -788,7 +839,11 @@ Explicitly avoided: cream backgrounds with serif display type, purple-to-indigo 
 
 ### 9.2 Screens
 
-**Landing.** One sentence on what it does. Four sample contracts as cards, each showing its worst finding as a teaser. Upload dropzone beneath, with the 24-hour deletion promise stated inline. Disclaimer above the fold.
+**Landing.** One sentence on what it does. Four sample contracts as cards, each showing its worst finding as a teaser — clickable by anyone, no account. Upload dropzone beneath, with the 24-hour deletion promise stated inline; dropping a file while logged out routes to login first. Disclaimer above the fold.
+
+**Login.** Email + password. Minimal, professional, same register as the rest — not a consumer-app splash. On success the SPA stores the JWT and returns the user to where they were headed (the upload they attempted, or the landing page).
+
+**Sign up.** Email + password **+ access code.** The code field is required and validated server-side; a bad or spent code fails the signup with a clear message. On success the account is created with the code's grant and the user is logged in. This is the only way an account that can spend API budget comes into existence (§2.5). There is no Upgrade page — a spent grant shows an inline "contact the author" message, not a checkout.
 
 **Document view.** Split pane. Left, the PDF with a highlight overlay. Right, four tabs.
 
@@ -823,7 +878,7 @@ Fifteen working days. Each milestone ends in something demonstrable — not "the
 | M1  | 2–3  | Ingest        | `POST /api/documents` with a real PDF produces rows in `documents`, `pages`, and `chunks` with local embeddings. Hybrid search returns sane results from a script.                                                                                                                                     |
 | M2  | 4–6  | **The agent** | `python -m clause.analyse sample.pdf` prints verified findings with page numbers to the terminal. Quote verification rejects a deliberately corrupted quote. Model-tier sweep run and the tier chosen (§8.1). This is the project. Everything before it is setup and everything after is presentation. |
 | M3  | 7–8  | Async + trace | Job queue claims and runs analyses. `agent_events` populate. SSE endpoint streams live and replays when complete. Failures surface as `status: failed` with a real message.                                                                                                                            |
-| M4  | 9–11 | Document view | Next.js split pane. Risk cards render. **Highlight overlay lands.** Trace drawer renders the live stream. This is the longest milestone; the overlay is why.                                                                                                                                           |
+| M4  | 9–11 | Document view | React (Vite SPA) split pane. Risk cards render. **Highlight overlay lands.** Trace drawer renders the live stream. This is the longest milestone; the overlay is why.                                                                                                                                           |
 | M5  | 12   | Ask           | Grounded Q&A over hybrid retrieval, streamed, with citations that jump to the source.                                                                                                                                                                                                                  |
 | M6  | 13   | Memo          | Markdown → PDF. Download works. The artifact is good enough to send to someone.                                                                                                                                                                                                                        |
 | M7  | 14   | Hardening     | Rate limits, spend ceiling (sized by the M2 sweep), demo mode with pre-baked traces, 24h deletion job, refusal handling, disclaimer everywhere.                                                                                                                                                        |
@@ -867,6 +922,7 @@ clause/
 │   │   │   ├── prompts.py    §4.6 — frozen. no interpolation. ever.
 │   │   │   └── verify.py     §4.5 — the hallucination guard
 │   │   ├── models.py         model IDs and tiering. one place. pinned at M0.
+│   │   ├── auth/             §2.5 — signup (access code) + login, JWT, bcrypt, the grant gate
 │   │   ├── ingest/           parse, chunk, embed
 │   │   ├── retrieval/        the hybrid query
 │   │   ├── memo/             jinja templates → md → pdf
@@ -874,7 +930,7 @@ clause/
 │   │   ├── routes/
 │   │   └── db/               models, migrations
 │   └── tests/
-├── web/                      next.js app router
+├── web/                      vite + react SPA (login, signup+code, analysis view)
 ├── rules/
 │   └── v1.yaml               the 15 rules, grouped into 4 families
 ├── evals/
@@ -929,5 +985,7 @@ clause/
 | ------- | ---------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | 1.0     | 2026-07-10 | Initial specification. OpenAI API with hand-rolled tool-use loop; model tiering by task; local `bge-small` embeddings. Scope fixed at: risk flagging with verified quotations, internal key-term extraction, memo generation, grounded Q&A. Cross-document comparison and standalone structured extraction deferred.                                                                                                                                                                                                                                                                                                                                                                                     |
 | 1.1     | 2026-07-14 | §4.5 rewritten. The specified `partial_ratio ≥ 95 → verified` guard was implemented and measured, and admitted a one-word negation flip at a score of 96.1 — a quote that inverts the contract's meaning, anchored to a real page. Fuzzy matching is demoted to locating a candidate span; authorisation now rests on an ordered token check with source/quote asymmetry. Also: model IDs and prices in §3.2 and §7.3 verified against the live API and found correct; `gpt-5.6-luna` and `gpt-5.4-nano` added to the §8.1 sweep. Delivery is now staged in three versions — see ROADMAP.md — with V1 shipping no retrieval at all, on the grounds that §4.1 already says the risk scan does not use it. |
+| 1.2     | 2026-07-15 | **Product reframed around a shippable MVP.** Accounts, JWT login, and per-user access control added (§2.5, §3.1, §5): the public demo stays free and login-free, but uploading your own contract now requires an account, a free account gets exactly one analysis, and an `is_admin` tier is unlimited. A placeholder Upgrade page replaces the anonymous two-pool budget as the primary abuse control; Stripe is deferred. "No user accounts" and "no billing" removed from §1.3 non-goals accordingly. Frontend simplified from Next.js to a **Vite + React SPA** (§3.1, §9). The eval harness, memo generation, and grounded Q&A are pulled *out* of the MVP and resequenced in ROADMAP.md — the agent and quote-verification guard they were built around are unchanged and remain in the repo. |
+| 1.3     | 2026-07-15 | **Access made invite-only; self-serve tier removed.** On the observation that this is a portfolio tool shown to a few prospects rather than a public SaaS, the v1.2 "free = 1 upload" self-serve tier and the Upgrade/Stripe flow were removed. Running the agent now requires signing up with a single-use **access code** you hand out, which sets a per-account `upload_grant` (§2.5); admins are unlimited on a protected reserve. `access_codes` table and `users.upload_grant` added (§5); §2.3 flow, §7.2 caps, and §9 screens updated (Upgrade page replaced by a code field on signup). The point of accounts is now (a) a real auth flow for the portfolio and (b) making the set of budget-spenders exactly the set of people you invited. Stripe moves to a "beyond V3" concern. |
 
 

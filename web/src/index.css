@@ -1,0 +1,70 @@
+@import "tailwindcss";
+
+/* Design register — SPEC.md §9.1.
+ *
+ * "Client-facing, so: dense, professional, unfussy. Legal-tech, not consumer-AI."
+ *
+ * Explicitly avoided, per the spec: cream backgrounds with serif display type, purple-to-indigo
+ * gradients, Inter as a default, and the rest of the generative-design house style. A contract
+ * review tool that looks like every AI landing page reads as a toy.
+ *
+ * So: a neutral slate ground, ONE accent (a restrained blue) used only for interactive affordance,
+ * and severity carried by a purpose-built four-step scale. Severity never relies on hue alone —
+ * every severity renders an icon and a word as well as a colour, so it survives colour-blindness
+ * and a black-and-white printout of the memo.
+ */
+
+@theme {
+  --font-sans:
+    ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", "Cascadia Mono", Menlo, Consolas, monospace;
+
+  /* The single accent. Interactive affordance only — never decoration. */
+  --color-accent-50: oklch(0.97 0.014 254);
+  --color-accent-600: oklch(0.55 0.18 254);
+  --color-accent-700: oklch(0.48 0.17 254);
+
+  /* The four-step severity scale. Paired with an icon and a label everywhere it is used. */
+  --color-sev-critical: oklch(0.51 0.19 25);
+  --color-sev-critical-bg: oklch(0.96 0.02 25);
+  --color-sev-high: oklch(0.6 0.15 55);
+  --color-sev-high-bg: oklch(0.96 0.03 65);
+  --color-sev-medium: oklch(0.58 0.1 95);
+  --color-sev-medium-bg: oklch(0.96 0.03 95);
+  --color-sev-low: oklch(0.55 0.06 240);
+  --color-sev-low-bg: oklch(0.96 0.01 240);
+}
+
+/* Restore the pointer cursor on anything clickable.
+ *
+ * Tailwind v4 changed Preflight to give <button> `cursor: default`, matching the raw browser
+ * default rather than v3's `cursor: pointer`. That reasoning comes from native desktop apps, where
+ * the arrow is correct — but on the web people have been trained for decades that a hand means "this
+ * does something when you click it", and buttons without it read as decoration. So we put it back.
+ *
+ * Scoped to :not(:disabled) on purpose: a disabled control must NOT show a hand, because that would
+ * promise an interaction that will not happen. <summary> is included because a disclosure triangle
+ * is clickable but is neither a button nor a link.
+ */
+@layer base {
+  button:not(:disabled),
+  [role="button"]:not(:disabled),
+  summary {
+    cursor: pointer;
+  }
+}
+
+html {
+  color-scheme: light;
+}
+
+body {
+  @apply bg-slate-50 text-slate-900 antialiased;
+  font-feature-settings: "cv05", "ss01";
+}
+
+/* A quoted clause is evidence, not prose. It gets a monospace block with a hard left rule so it
+ * reads as "this is verbatim from your document" rather than as the agent's own writing. */
+.clause-quote {
+  @apply border-l-2 border-slate-300 bg-white px-3 py-2 font-mono text-[13px] leading-relaxed text-slate-700;
+}

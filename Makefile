@@ -7,7 +7,7 @@ help:
 	@echo "  make analyse    run the agent on the sample contract, print verified findings"
 	@echo "  make eval       score the agent against the answer keys in evals/labels/"
 	@echo "  make sweep      the model-tier sweep (SPEC.md 8.1) — costs ~\$$1 in API calls"
-	@echo "  make test       28 tests. the ones that matter are in test_verify.py"
+	@echo "  make test       49 tests. the ones that matter are in test_verify.py and test_auth.py"
 	@echo "  make lint       ruff + mypy"
 	@echo ""
 	@echo "  Needs OPENAI_API_KEY and DATABASE_URL in .env"

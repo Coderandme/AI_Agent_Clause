@@ -1,17 +1,3 @@
----
-title: Clause
-emoji: 📄
-colorFrom: gray
-colorTo: blue
-sdk: gradio
-sdk_version: 6.20.0
-python_version: '3.12'
-app_file: app.py
-pinned: false
-license: mit
-short_description: Contract risk agent with verified quotations
----
-
 # Clause — Contract Intelligence Agent
 
 An agent that reads a commercial contract, flags the risks, and **proves every quotation it shows
@@ -22,21 +8,24 @@ rules on its own — calling `get_rule_detail("auto_renewal")`, checking the not
 a finding — while you watch. It takes about a minute and it does not ask you anything.
 
 > ⚠️ **Status: in development, and this README describes what is *built*, not what is planned.**
-> The agent, the hallucination guard, and the eval harness work, and every number below is real.
-> The UI is an interim **Gradio** app — the dense Next.js frontend in [SPEC.md](SPEC.md) §9 does not
-> exist yet, and neither do the job queue, the memo, or the Q&A tab. See [ROADMAP.md](ROADMAP.md).
+> The agent, the hallucination guard, the eval harness, the auth/access layer, and the React SPA
+> work, and every number below is real. **The one gap:** the web upload ingests your PDF but does not
+> yet trigger the agent — that runs from the CLI today, and wiring the two together is the next piece
+> of work. The job queue, the memo, and Q&A are later versions. See [ROADMAP.md](ROADMAP.md).
 
-**Run it yourself** — two contracts ship pre-analysed and replay instantly at zero cost, agent trace
-and all, so the demo works without an API key:
+**Run it yourself.** The two sample contracts are pre-analysed and bundled into the frontend, so the
+demo works with **no API key, no database, and the backend switched off**:
 
 ```bash
-cd api && uv sync --extra dev
-cd .. && uv run --project api python app.py     # http://localhost:7860
+cd web && npm install && npm run dev        # → http://localhost:5173  (samples work standalone)
+
+cd api && uv sync --extra dev               # the backend, for login/signup/upload
+uv run uvicorn clause.app:app --reload      # → http://127.0.0.1:8000/docs
+uv run python -m clause.analyse ../demo/contracts/saas_msa.pdf   # the agent, on a real PDF
 ```
 
-A hosted Gradio demo is configured and ready ([DEPLOY.md](DEPLOY.md)) but is not currently up — the
-free Hugging Face CPU tier allows one running Space per account, and that slot is in use. The app,
-the Dockerfile, and the spend caps all work; it is a quota, not a bug.
+`Dockerfile` builds the API for a Hugging Face Space (Docker SDK) — see [DEPLOY.md](DEPLOY.md). It is
+not currently hosted; the free CPU tier allows one running Space per account and that slot is in use.
 
 ---
 
@@ -312,30 +301,43 @@ uv run pytest
 | ✅ | Eval harness + model-tier sweep, with the decision rule stated in advance |
 | ✅ | Full schema on Neon: pgvector, HNSW index, job queue, usage ledger |
 | ✅ | Demo mode — both contracts pre-analysed, real traces, **$0.00 per view** |
-| ✅ | Spend caps: two-pool budget, per-IP and per-session limits, hard ceiling |
-| ✅ | Deployable: one container, Gradio + Neon, **$0 infrastructure**. Not currently hosted — free-tier quota, not a defect. |
-| 🟡 | UI — interim **Gradio** app, runs locally. The Next.js frontend in SPEC.md §9 is not built. |
-| ⬜ | Job queue worker, `agent_events`, SSE streaming trace (the trace currently replays, not streams) |
+| ✅ | **Auth + invite-only access**: JWT login, single-use access codes, per-account grants, admin tier |
+| ✅ | **React SPA** (Vite + TypeScript): landing + demo, login, signup-with-code, upload. The demo is bundled static — findings, trace, **and the source PDF** — so you can click a finding and check its quote against the contract, with the backend switched off. |
+| ✅ | **Web upload → agent → findings**: an invited user uploads a PDF, the agent runs in the background, the SPA polls and renders the verified findings. The **$5 monthly ceiling is armed** (spend is recorded to the ledger). Verified end-to-end on a real run: 15 findings, 15/15 quotes verified, $0.42. |
+| ✅ | **24-hour deletion**: uploads and everything derived from them (PDF, text, findings, trace) are deleted on schedule — the promise the dropzone makes, kept. Grant accounting survives it, so deletion can't refund the cap. |
+| ✅ | Deployable: one container (FastAPI + Neon), **$0 infrastructure**. Not currently hosted — free-tier quota, not a defect. |
+| ⬜ | `agent_events` **SSE streaming** (the live trace is recorded and shown on completion, not streamed turn-by-turn); durable job queue |
 | ⬜ | Memo generation, Q&A tab, retrieval, span-precise PDF highlighting |
 
-### The two-pool spend cap
+### Invite-only access, and the mistake I made first
 
-A public URL with an upload box and a real API key behind it is an invitation. The obvious defence is
-one global ceiling — and it fails in a specific, avoidable way: a bot drains the budget on Tuesday,
-and on Thursday you open your own project in an interview and it says *uploads disabled*. The cap
-protects the money by sabotaging the only reason the money was being spent.
+A public URL with an upload box and a real API key behind it is an invitation. My first design split
+the budget in two: a small **anonymous** pool any visitor could draw from, and a **reserved** pool
+behind a shared access code, so a bot draining the public pool on Tuesday couldn't break my own demo
+in an interview on Thursday. It was a nice mechanism. It was also solving the wrong problem.
 
-So the budget is split. Anonymous visitors draw from a small pool ($2/month, one upload per session,
-three per IP per day). Anyone with an access code draws from a reserve strangers cannot reach. A bot
-can empty the first; it cannot touch the second. Both sit under a hard $5 ceiling.
+This is a portfolio piece shown to a handful of prospects — not a public SaaS. Letting strangers
+self-serve real analyses buys almost nothing (the pre-computed demo already proves the product works,
+instantly and for free) and costs real money and real risk. So there is **no anonymous spend path at
+all** now:
 
-Demo mode is unaffected by any of it, because it costs nothing at all.
+| | how they get in | what they can do |
+|---|---|---|
+| **Anonymous** | nothing | the demo — pre-computed, **$0**, no account |
+| **Invited client** | signs up with a single-use **access code** I issue | analyses, up to that code's grant |
+| **Admin** | a flag set by hand in the database | unlimited |
 
-**The public demo runs on `gpt-5.4-mini`, and that is a budget decision, not an eval one.** The sweep
-above explicitly cannot tell us mini is as good as sol. But at sol's $0.33 an analysis, a $5 ceiling
-buys *fifteen uploads* — which is not a demo. On mini it buys about a hundred and forty. `sol`
-remains the default for the real product. Saying which kind of decision this is seemed more useful
-than quietly picking the cheap one and letting the sweep table imply it was evidence-based.
+The set of people who can spend my OpenAI budget is exactly the set of people I invited. A hard
+monthly ceiling sits behind that as a backstop. The two-pool code was **deleted rather than left in
+place** — a spend cap that contradicts the spec is worse than no spend cap, because you'll trust it.
+
+**A side effect worth naming: the cheap-model argument evaporated with the anonymous pool.** When
+strangers could upload, running the public scan on `gpt-5.4-mini` was a *budget* decision — at sol's
+$0.33 an analysis a $5 ceiling buys fifteen uploads, which is not a demo; on mini it buys about a
+hundred and forty. Invite-only removes that pressure entirely: a handful of invited clients at a
+handful of analyses each is affordable on the flagship. So the scan stays on **`sol`**, the specced
+default, and the tier choice goes back to being decided by the eval sweep rather than by the bill —
+which is where it belonged. The sweep above still cannot license a cheaper tier on one contract.
 
 ---
 

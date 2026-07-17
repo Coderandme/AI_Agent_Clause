@@ -1,0 +1,91 @@
+# Render Blueprint — the API. See DEPLOY.md for the click-by-click.
+#
+# Infrastructure as a file rather than dashboard clicks, so the deployment is reviewable in the same
+# pull request as the code that depends on it, and so it can be recreated from scratch without
+# anyone remembering which toggles they flipped.
+#
+# WHAT RUNS WHERE. Both halves, on one platform:
+#
+#   clause-api  — a Docker WEB SERVICE. A real, long-lived process, because an analysis runs 40-80s
+#                 as a background task after the response and serverless would kill it.
+#   clause-web  — a STATIC SITE. Just files on a CDN. It has the opposite needs to the API, which is
+#                 why they are different service types rather than one box doing both.
+#
+# The public demo is bundled into the static build, so it never touches clause-api at all — which is
+# what lets us accept a free API that sleeps.
+#
+# THE FREE PLAN'S ONE COST: it spins down after ~15 minutes with no inbound request, and the next
+# request waits ~50s for a cold start. We accept that deliberately:
+#   * The demo — the thing a stranger sees first — is static and never hits this service at all.
+#   * The only people who CAN hit it are invited account holders logging in or uploading, and someone
+#     who just dropped a contract on the dropzone is already braced for a ~60-80s analysis.
+# This is exactly why ROADMAP.md §2.3 originally rejected Render and now doesn't: the objection was
+# a cold start on the demo path, and the demo no longer has a backend path to be cold on.
+
+services:
+  - type: web
+    name: clause-api
+    runtime: docker
+    plan: free
+    region: oregon
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    branch: main
+
+    # /api/health reports db connectivity and the loaded rule count. It always returns 200 (a health
+    # check that 500s on a degraded database would take the whole service down rather than tell us
+    # about it), so this proves the process is up and serving, not that Postgres is happy.
+    healthCheckPath: /api/health
+
+    envVars:
+      # sync: false means "Render must not read this from the blueprint" — it is a secret, set by
+      # hand in the dashboard. Nothing sensitive belongs in a file that lives in git.
+      - key: DATABASE_URL # Neon connection string
+        sync: false
+      - key: OPENAI_API_KEY # the only thing that costs money
+        sync: false
+
+      # Generated once by Render and never seen by us — which is the right handling for both.
+      # JWT_SECRET signs every login token: anyone holding it can mint a token for any user,
+      # including an admin. Regenerating it logs everyone out, which is a feature, not a fault.
+      - key: JWT_SECRET
+        generateValue: true
+      # Hashes IPs in the spend ledger, so a raw address is never stored (SPEC.md §7.2).
+      - key: IP_HASH_SECRET
+        generateValue: true
+
+      # The SPA's origin, so the browser is allowed to call this API (app.py locks CORS to an exact
+      # list — never "*", because this API carries the token that gates spending). Even with both
+      # services on Render they are still different origins, so this is still required. Pydantic
+      # parses a list setting as JSON, so the value is: ["https://clause-web-xxxx.onrender.com"]
+      - key: CORS_EXTRA_ORIGINS
+        sync: false
+
+  # ── the SPA ──────────────────────────────────────────────────────────────────────────────────────
+  - type: web
+    name: clause-web
+    runtime: static
+    rootDir: web
+    buildCommand: npm ci && npm run build
+    staticPublishPath: ./dist
+    branch: main
+
+    # WITHOUT THIS, DEEP LINKS 404. The SPA is one index.html and React Router decides what to show
+    # from the path in the browser. Ask a static host for /analyse and it looks for a file called
+    # `analyse`, finds nothing, and 404s — so the app works until someone refreshes on a page that
+    # isn't `/`, or pastes a link to one. The rewrite hands every path to index.html and lets the
+    # router do its job.
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+
+    envVars:
+      # Vite bakes this into the bundle at BUILD time — it is not read at runtime. So changing it
+      # requires a redeploy of this service, not a restart.
+      - key: VITE_API_URL # https://clause-api-xxxx.onrender.com
+        sync: false
+      # Vite 7 wants Node >= 20.19; Render's default is older on some accounts. Pin it so the build
+      # doesn't fail on a machine we don't control.
+      - key: NODE_VERSION
+        value: "22"

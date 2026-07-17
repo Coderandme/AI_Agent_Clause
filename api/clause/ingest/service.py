@@ -45,6 +45,7 @@ async def ingest(
     filename: str,
     source: str = "upload",
     owner_session: str | None = None,
+    owner_user_id: UUID | None = None,
 ) -> IngestedDocument:
     s = settings()
 
@@ -77,12 +78,26 @@ async def ingest(
         )
 
     # ── dedupe ───────────────────────────────────────────────────────────────────────────────────
+    # Per owner for uploads (migration 004): the same user re-uploading the same file collapses onto
+    # their existing row and is not charged twice, but two different accounts get their own rows so
+    # one account never sees another's document and every account's grant is counted honestly.
     digest = sha256(data).hexdigest()
-    existing = await conn.fetchrow(
-        "SELECT id, page_count, char_count FROM documents WHERE sha256 = $1 AND source = $2",
-        digest,
-        source,
-    )
+    if source == "upload" and owner_user_id is not None:
+        existing = await conn.fetchrow(
+            """
+            SELECT id, page_count, char_count FROM documents
+            WHERE sha256 = $1 AND source = $2 AND owner_user_id = $3
+            """,
+            digest,
+            source,
+            owner_user_id,
+        )
+    else:
+        existing = await conn.fetchrow(
+            "SELECT id, page_count, char_count FROM documents WHERE sha256 = $1 AND source = $2",
+            digest,
+            source,
+        )
     if existing is not None:
         return IngestedDocument(
             document_id=existing["id"],
@@ -106,8 +121,8 @@ async def ingest(
             """
             INSERT INTO documents (
               id, sha256, filename, source, page_count, char_count,
-              is_scanned, storage_key, full_text, owner_session, expires_at
-            ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11)
+              is_scanned, storage_key, full_text, owner_session, owner_user_id, expires_at
+            ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12)
             """,
             document_id,
             digest,
@@ -119,6 +134,7 @@ async def ingest(
             key,
             parsed.full_text,
             owner_session,
+            owner_user_id,
             expires_at,
         )
         await conn.executemany(
@@ -128,6 +144,15 @@ async def ingest(
             """,
             [(document_id, p.page_number, p.char_start, p.char_end) for p in parsed.pages],
         )
+
+        # Charge the grant, in the same transaction that creates the document. A counter rather than
+        # a count of rows, because the 24h deletion job (retention.py) removes those rows — and
+        # counting them would hand the grant back every night (migration 005). Only a NEW document
+        # charges: a deduplicated re-upload returns above and never reaches here.
+        if owner_user_id is not None:
+            await conn.execute(
+                "UPDATE users SET uploads_used = uploads_used + 1 WHERE id = $1", owner_user_id
+            )
 
     return IngestedDocument(
         document_id=document_id,
