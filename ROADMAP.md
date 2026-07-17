@@ -1,6 +1,6 @@
 # Clause — Incremental Roadmap
 
-**Companion to SPEC.md** · Version 0.4 · 2026-07-17 · Status: **V1 built; deploying**
+**Companion to SPEC.md** · Version 0.5 · 2026-07-17 · Status: **V1 DEPLOYED — next up: V2 (RAG Q&A)**
 
 SPEC.md specifies the finished product. This document specifies the *order we build it in*, the
 *infrastructure it runs on at zero cost*, and — most importantly — the set of decisions we make on
@@ -29,8 +29,23 @@ Where this document contradicts SPEC.md, it says so explicitly and states why.
 > Verified on a real run: 15 findings, 15/15 quotes verified, $0.42, ceiling armed. Hosting moved to
 > **Render** after Hugging Face withdrew its free CPU tier in July 2026 — the second host to do so
 > (§2.3). Two sections were found describing a jobs-table worker we never built and have been
-> corrected to say what actually runs (§2.4, §5.1). Remaining before V1 is "done": it is not yet
-> deployed to a public URL.
+> corrected to say what actually runs (§2.4, §5.1).
+>
+> **v0.5 (2026-07-17) — V1 is LIVE.** Deployed to Render from the committed `render.yaml`:
+> `clause-web` (static SPA + bundled demo) and `clause-api` (Docker). Verified in production: a
+> 17-page real contract (tearlab, SEC EDGAR) uploaded through the site, analysed, findings rendered,
+> spend recorded to the ledger. **V1 is done by its own definition.**
+>
+> ── **IF YOU ARE PICKING THIS PROJECT UP: START HERE** ──────────────────────────────
+> The next version is **V2 — RAG Q&A** (§3, "Version 2"): chunking, local-or-API embeddings,
+> `pgvector` hybrid search, the `search_document` tool, and the Ask tab. Before writing code, read:
+> `ARCHITECTURE.md` (the map of what exists), §2.4 here (what the async story actually is — there is
+> NO jobs-table worker), and §2.3's RAM warning (Render free = 512 MB; local ONNX embeddings likely
+> do not fit — SPEC §3.3 pre-authorises switching to OpenAI's embedding API, ~$0.0006/contract).
+> Smaller debts that can ride along with V2, in value order: live SSE trace streaming for uploads
+> (events already recorded in `agent_events`), showing the uploaded PDF with page-jump on the
+> Analyse page (needs R2 configured — local disk on Render is ephemeral), and a reaper for analyses
+> stuck at `running` after a container restart.
 
 **Cost position:** every piece of infrastructure is free tier. OpenAI tokens are the only thing that
 costs money, and that is accepted. The spend ceiling from SPEC.md §7.2 still ships — but as *abuse
@@ -67,7 +82,7 @@ free tiers stitched together, and would fall over on the first one that expired.
 ```
    browser
      │
-     ├──[static]──►  Vite + React SPA   (Vercel Hobby / static host, free)
+     ├──[static]──►  Vite + React SPA   (Render static site, free)
      │                 · landing (public) · login · signup+code · analysis view
      │                 · DEMO contracts bundled as static JSON ── $0, no backend at all
      │
@@ -114,7 +129,7 @@ depends on no running service at all.
 
 | Service | Tier | What it holds | The limit that will actually bite |
 |---|---|---|---|
-| Vercel | Hobby | Vite + React SPA (static build) | Non-commercial use only. A portfolio qualifies. Static hosting; any free static host works. |
+| Render | Free static site | Vite + React SPA + the bundled demo | Bandwidth ceiling. Never sleeps — it is a CDN, not a process, which is why the demo survives the API napping. |
 | Neon | Free | All Postgres, `pgvector` | Storage ceiling, and a monthly **compute-hour** allowance. See §5.1. |
 | Cloudflare R2 | Free | Uploaded PDFs, rendered memos | Storage ceiling. Uploads are deleted at 24h, so this stays near empty. |
 | Render | Free web service | FastAPI + agent + retention sweep | **512 MB / 0.1 vCPU**, and it sleeps after 15 min idle (~50s wake). The RAM is what will bite, at V2. See §2.3. |
@@ -165,7 +180,8 @@ live in. That process is this container.
 Nor can that process be Vercel — and this is structural, not about price. An analysis takes 40–80
 seconds and runs as a background task that must outlive the HTTP response; a serverless function is
 killed the instant it responds. (Vercel Hobby also caps a function at 60s, and our measured run was
-80s, so it would fail twice over.) Vercel hosts the SPA, which is static and has the opposite needs.
+80s, so it would fail twice over.) The SPA has the opposite needs — static files on a CDN — which is
+why it lives on Render's static-site type rather than in this container.
 
 Still rejected, for the record:
 
@@ -343,7 +359,11 @@ Five things are therefore fixed on day 1 and never revisited:
    from `search_document` onward, and only on the deploy that adds it.)
 3. **The SSE vocabulary from §6.2 is frozen in V1.** The frontend never sees an OpenAI type name;
    one adapter normalises them. V2's Ask tab reuses that vocabulary rather than inventing a second.
-4. **The deployment topology is the final one from day 1.** Vercel + Neon + R2 + a Docker API. V2 and
+4. **The deployment topology is the final one from day 1.** Render (static SPA + Docker API) + Neon +
+   R2. Note the caveat §2.3 earned the hard way: the *shape* is final (a static frontend, a
+   long-lived container, one Postgres), but the *hosts* are rented — two have already withdrawn their
+   free tiers under us. Nothing in the code knows where it runs, which is what makes that survivable.
+   V2 and
    V3 add no infrastructure whatsoever. There is no "and then we move it to real hosting" step,
    because the free tier *is* the hosting.
 5. **`models.py` is the only place a model ID appears**, pinned from the live API reference on day 1
@@ -525,3 +545,16 @@ What did **not** change: the agent, the quote-verification guard, the 15-rule li
 single-Postgres design, local embeddings (when they land in V2), the free-tier hosting topology, and
 `models.py` as the one home for model IDs. The engine is the same; v0.2 only changes the order the
 shell is built in and puts a door with a lock on the front of it.
+
+
+Note to myself -
+cd api
+uv run python -m clause.auth.codes new --grant 3     # → CLAUSE-XXXX-XXXX
+--grant N = how many analyses that code is worth. Change the number per client (--grant 1 for a taster, --grant 5 for a serious prospect). It writes straight into Neon — nothing to do in the Neon console.
+
+The other two commands:
+
+
+uv run python -m clause.auth.codes list                    # who claimed what
+uv run python -m clause.auth.codes make-admin you@x.com    # unlimited, after you sign up
+Remember the two numbers are different things: the code's grant_count (3) never changes — it's the coupon's face value. Your allowance is copied to users.upload_grant at signup, and usage is counted on your user row.
