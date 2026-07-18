@@ -88,6 +88,18 @@ export interface DemoAnalysis {
   seconds: number;
 }
 
+/** One retrieved excerpt backing a Q&A answer. Sent by the server BEFORE the answer streams, so
+ * every [n] the model cites is already resolvable. The span is a verbatim slice of the document —
+ * the chunker's invariant — which is why a citation can carry a page number worth trusting. */
+export interface Citation {
+  n: number;
+  section_label: string | null;
+  page: number | null;
+  char_start: number;
+  char_end: number;
+  preview: string;
+}
+
 /** What POST /api/documents returns: the document is stored and an analysis has been scheduled.
  * The `analysis_id` is what the SPA then polls. */
 export interface UploadResult {

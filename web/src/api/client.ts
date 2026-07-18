@@ -4,7 +4,7 @@
  * — it is bundled JSON and never touches the network (ROADMAP.md §5.2).
  */
 
-import type { Analysis, TokenResponse, UploadResult, User } from "@/types";
+import type { Analysis, Citation, TokenResponse, UploadResult, User } from "@/types";
 
 // In dev this points at the local FastAPI; in production it is baked in at build time by Vite.
 // Set VITE_API_URL in web/.env.production for the deployed SPA.
@@ -103,4 +103,71 @@ export const api = {
   },
 
   getAnalysis: (id: string) => request<Analysis>(`/api/analyses/${id}`),
+
+  askStream,
 };
+
+export interface AskHandlers {
+  onCitations: (citations: Citation[]) => void;
+  onDelta: (text: string) => void;
+  onDone: (costMicrodollars: number) => void;
+  onError: (message: string) => void;
+}
+
+/** Consume the streamed Q&A answer (V2). SSE over fetch, not EventSource — EventSource can only
+ * GET and cannot carry the Authorization header, and this endpoint needs both a POST body and the
+ * JWT. So we read the response body and parse the `event:`/`data:` frames ourselves; the format is
+ * two lines per event, blank-line separated. */
+async function askStream(
+  analysisId: string,
+  question: string,
+  handlers: AskHandlers,
+): Promise<void> {
+  const token = getToken();
+  let res: Response;
+  try {
+    res = await fetch(`${API_URL}/api/analyses/${analysisId}/ask`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      },
+      body: JSON.stringify({ question }),
+    });
+  } catch {
+    handlers.onError("Could not reach the server. If running locally, is the API started?");
+    return;
+  }
+  if (!res.ok || !res.body) {
+    handlers.onError(await errorMessage(res));
+    return;
+  }
+
+  const reader = res.body.getReader();
+  const decoder = new TextDecoder();
+  let buffer = "";
+  for (;;) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    buffer += decoder.decode(value, { stream: true });
+
+    // Frames are separated by a blank line; anything after the last separator may be incomplete,
+    // so it stays in the buffer for the next read.
+    const frames = buffer.split("\n\n");
+    buffer = frames.pop() ?? "";
+    for (const frame of frames) {
+      let event = "";
+      let data = "";
+      for (const line of frame.split("\n")) {
+        if (line.startsWith("event: ")) event = line.slice(7).trim();
+        else if (line.startsWith("data: ")) data = line.slice(6);
+      }
+      if (!event || !data) continue;
+      const payload = JSON.parse(data) as Record<string, unknown>;
+      if (event === "citations") handlers.onCitations(payload["citations"] as Citation[]);
+      else if (event === "delta") handlers.onDelta(payload["text"] as string);
+      else if (event === "done") handlers.onDone((payload["cost_microdollars"] as number) ?? 0);
+      else if (event === "error") handlers.onError(payload["message"] as string);
+    }
+  }
+}

@@ -13,6 +13,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import type { ChangeEvent } from "react";
 import { api, ApiError } from "@/api/client";
 import { useAuth } from "@/auth/AuthContext";
+import { AskPanel } from "@/components/AskPanel";
 import { ErrorNote } from "@/components/Form";
 import { FindingCard } from "@/components/FindingCard";
 import { KeyTermsTable } from "@/components/KeyTermsTable";
@@ -221,6 +222,8 @@ function Result({ analysis, onReset }: { analysis: Analysis; onReset: () => void
           </ul>
         </details>
       )}
+
+      <AskPanel analysisId={analysis.id} />
 
       <button
         type="button"
