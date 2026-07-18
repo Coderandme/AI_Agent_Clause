@@ -11,12 +11,18 @@ located in the document never reaches the user. The count of rejected ones is `u
 
 from __future__ import annotations
 
+import json
+from collections.abc import AsyncIterator
 from typing import Any
 from uuid import UUID
 
 from fastapi import APIRouter, HTTPException
+from fastapi.responses import StreamingResponse
+from pydantic import BaseModel, Field
 
+from clause import guard, qa
 from clause.auth.deps import CurrentUser
+from clause.config import settings
 from clause.db import pool
 
 router = APIRouter(prefix="/api/analyses", tags=["analyses"])
@@ -86,6 +92,58 @@ async def get_analysis(analysis_id: UUID, user: CurrentUser) -> dict[str, Any]:
     # payload is jsonb; asyncpg returns it as a JSON string, so parse it back for the client.
     result["key_terms"] = _json_or_none(key_terms)
     return result
+
+
+class AskRequest(BaseModel):
+    # The cap is spam protection, not a UX opinion: the question is embedded and sent to a model,
+    # and a megabyte of "question" should die in validation, not in a bill.
+    question: str = Field(min_length=3, max_length=500)
+
+
+@router.post("/{analysis_id}/ask")
+async def ask(analysis_id: UUID, body: AskRequest, user: CurrentUser) -> StreamingResponse:
+    """Grounded Q&A over the analysed document, streamed as SSE. V2 (SPEC.md §2.3).
+
+    Events: `citations` (the excerpt map, first), `delta` (answer tokens), `done` (cost), `error`.
+    Q&A does not consume the upload grant — the grant counts analyses (SPEC §2.5) — but every
+    answer's cost is recorded, and the monthly ceiling is checked here before any money moves.
+    """
+    p = await pool.pool()
+    async with p.acquire() as conn:
+        row = await conn.fetchrow(
+            """
+            SELECT a.document_id, d.owner_user_id FROM analyses a
+            JOIN documents d ON d.id = a.document_id WHERE a.id = $1
+            """,
+            analysis_id,
+        )
+        if row is None or (row["owner_user_id"] != user.id and not user.is_admin):
+            raise HTTPException(status_code=404, detail="No such analysis.")
+
+        total = await guard.month_spend_microdollars(conn)
+        if total >= settings().monthly_ceiling_microdollars:
+            raise HTTPException(
+                status_code=402, detail="This month's budget is spent. Q&A is paused."
+            )
+    document_id: UUID = row["document_id"]
+
+    async def sse() -> AsyncIterator[str]:
+        try:
+            async for event, payload in qa.ask_stream(document_id, body.question, str(user.id)):
+                yield f"event: {event}\ndata: {json.dumps(payload)}\n\n"
+        except Exception:  # noqa: BLE001 — a stream cannot 500; it can only say what happened
+            import logging
+
+            logging.getLogger(__name__).exception("ask stream failed for %s", analysis_id)
+            yield f"event: error\ndata: {json.dumps({'message': 'The answer failed midway.'})}\n\n"
+
+    return StreamingResponse(
+        sse(),
+        media_type="text/event-stream",
+        # Proxies love to buffer streams into one big flush at the end, which turns "streaming"
+        # into "spinner". These headers ask them not to.
+        headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"},
+    )
 
 
 def _seconds(started: Any, completed: Any) -> float | None:

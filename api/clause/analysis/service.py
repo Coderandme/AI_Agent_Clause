@@ -34,7 +34,7 @@ from clause.agent.execute import AnalysisState, ToolExecutor
 from clause.agent.verify import DocumentIndex
 from clause.config import settings
 from clause.db import pool
-from clause.retrieval.search import index_document
+from clause.retrieval.search import index_document, search
 
 log = logging.getLogger(__name__)
 
@@ -118,7 +118,7 @@ async def run_and_store(analysis_id: UUID, document_id: UUID, spend_key: str) ->
     pages = [(r["page_number"], r["char_start"], r["char_end"]) for r in page_rows]
 
     try:
-        out = await _run_scan(full_text, pages, spec)
+        out = await _run_scan(full_text, pages, spec, document_id)
     except loop.AgentRefused as exc:
         await _fail(analysis_id, f"The model declined to analyse this document. ({exc})")
         return
@@ -134,14 +134,35 @@ async def run_and_store(analysis_id: UUID, document_id: UUID, spend_key: str) ->
 
 
 async def _run_scan(
-    full_text: str, pages: list[tuple[int, int, int]], spec: models.ModelSpec
+    full_text: str,
+    pages: list[tuple[int, int, int]],
+    spec: models.ModelSpec,
+    document_id: UUID,
 ) -> ScanOutput:
     """Four rule-family passes, warm-then-fan-out — the same orchestration as clause/analyse.py and
     clause/demo.py, here for a real (non-eval) run that persists its result."""
     index = DocumentIndex(full_text, pages)
     state = AnalysisState()
-    execute = ToolExecutor(index, state)
     client = AsyncOpenAI(api_key=settings().openai_api_key)
+
+    # V2: the web scan gets a real search_document tool over this document's chunks. Rarely used
+    # during the scan (the whole document is in context, and the tool's description says so), but
+    # available when the model wants to re-locate exact wording. Each call borrows a pooled
+    # connection briefly rather than holding one across the 60-80s scan (ROADMAP §5.1).
+    async def scan_search(query: str) -> list[dict[str, Any]]:
+        p = await pool.pool()
+        async with p.acquire() as conn:
+            hits = await search(conn, client, document_id, query, limit=5)
+        return [
+            {
+                "section": h.section_label,
+                "page": index.page_for_offset(h.char_start),
+                "text": h.text[:1500],
+            }
+            for h in hits
+        ]
+
+    execute = ToolExecutor(index, state, search_fn=scan_search)
 
     trace: list[dict[str, Any]] = []
     started = time.monotonic()

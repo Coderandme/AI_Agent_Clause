@@ -11,11 +11,19 @@ the persistence layer independent of each other. The caller decides what to do w
 
 from __future__ import annotations
 
+from collections.abc import Awaitable, Callable
 from dataclasses import dataclass, field
 from typing import Any
 
 from clause import rules
 from clause.agent.verify import DocumentIndex, verify
+
+# V2: how `search_document` reaches the retrieval layer without this module importing the database.
+# The executor stays injectable — the eval harness and the CLI run the agent with search_fn=None
+# (the tool then reports itself unavailable, which the model handles), while the web path injects a
+# real hybrid search over the document's chunks. Returns rows shaped for the model:
+# {"section": ..., "page": ..., "text": ...}.
+SearchFn = Callable[[str], Awaitable[list[dict[str, Any]]]]
 
 
 @dataclass(slots=True)
@@ -62,10 +70,13 @@ class AnalysisState:
 class ToolExecutor:
     """Executes the agent's tool calls against one document."""
 
-    def __init__(self, index: DocumentIndex, state: AnalysisState) -> None:
+    def __init__(
+        self, index: DocumentIndex, state: AnalysisState, search_fn: SearchFn | None = None
+    ) -> None:
         self.index = index
         self.state = state
         self.library = rules.load()
+        self.search_fn = search_fn
 
     async def __call__(self, name: str, args: dict[str, Any]) -> dict[str, Any]:
         handler = getattr(self, f"_{name}", None)
@@ -73,7 +84,8 @@ class ToolExecutor:
             # Unknown tool. Impossible via the API (tools are declared), but the model can still
             # hallucinate a name — and this must return a result, not raise, or the loop wedges.
             return {"error": f"No such tool: {name}."}
-        return await handler(args)
+        result: dict[str, Any] = await handler(args)
+        return result
 
     async def _get_rule_detail(self, args: dict[str, Any]) -> dict[str, Any]:
         rule = self.library.by_id(args.get("rule_id", ""))
@@ -134,3 +146,18 @@ class ToolExecutor:
         summary = args.get("summary", "")
         self.state.summaries.append(summary)
         return {"complete": True}
+
+    async def _search_document(self, args: dict[str, Any]) -> dict[str, Any]:
+        """V2. Hybrid retrieval over this document's chunks — injected, so contexts without a
+        database (the eval harness, the CLI) degrade to an honest 'unavailable' the model can work
+        around by reading the document it already has in context."""
+        if self.search_fn is None:
+            return {
+                "error": "search_document is not available here. The full document is in your "
+                "context — locate the clause by reading it."
+            }
+        query = str(args.get("query", "")).strip()
+        if not query:
+            return {"error": "Empty query."}
+        results = await self.search_fn(query)
+        return {"results": results, "count": len(results)}

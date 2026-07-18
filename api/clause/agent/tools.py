@@ -1,8 +1,10 @@
 """The agent's tool surface. SPEC.md §4.4.
 
-Five tools in V1. `search_document` is the sixth and lands in V2 with the Ask tab — the risk scan
-reads the whole document and does not retrieve (SPEC.md §4.1), so building it now would be building
-something the marquee feature never calls.
+Six tools: the five V1 tools, plus `search_document` (V2). The risk scan still reads the whole
+document and does not retrieve (SPEC.md §4.1) — search exists so the agent can RE-LOCATE exact
+wording it wants to quote, and because Q&A runs on it. Note that `search_document` sorts LAST
+alphabetically, which is not luck: appended at the end of the sorted registry, it invalidates the
+cached prompt prefix only from its own entry onward, once, on the deploy that adds it (ROADMAP §4).
 
 Three rules govern every schema here, and each of them is load-bearing:
 
@@ -237,6 +239,28 @@ def build_tools() -> list[dict[str, Any]]:
             },
         ),
     ]
+
+    tools.append(
+        _tool(
+            "search_document",
+            "Call this ONLY when you need to re-locate the exact wording of a clause you intend "
+            "to quote — for instance before record_finding, when you remember the substance of a "
+            "term but not its verbatim text. Runs a hybrid (meaning + keyword) search over this "
+            "document and returns the most relevant passages verbatim, with section labels and "
+            "pages. Do NOT use it to explore the document generally: the full text is already in "
+            "your context, and reading it is faster and more complete than searching it.",
+            {
+                "query": {
+                    "type": "string",
+                    "description": (
+                        "What to look for. Either distinctive words you remember from the clause "
+                        "('one hundred and twenty days notice') or a description of its subject "
+                        "('limitation of liability carve-outs')."
+                    ),
+                }
+            },
+        )
+    )
 
     # Sorted by name. See rule 3 in the module docstring — this is a caching requirement, not
     # tidiness.
