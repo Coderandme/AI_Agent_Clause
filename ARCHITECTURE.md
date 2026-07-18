@@ -85,6 +85,14 @@ Rag_Doc/
 │       │
 │       ├── analysis/       ✅ ★ runs the agent on an uploaded doc + persists the result
 │       │   └── service.py    the 4 passes → findings/absences/key_terms/trace → record_spend
+│       │                     (also indexes the doc for Q&A first — non-fatal if it fails)
+│       │
+│       ├── retrieval/      ✅ ★ V2: the RAG layer (indexing + hybrid search; Q&A route pending)
+│       │   ├── chunking.py   section-aware ~800-token chunks. INVARIANT: every chunk is a
+│       │   │                 verbatim slice of full_text, so offsets → pages still resolve
+│       │   ├── embed.py      OpenAI text-embedding-3-small at 384 dims (NOT local ONNX —
+│       │   │                 Render's 512 MB can't hold it; models.py has the full why)
+│       │   └── search.py     index_document + the spec's hybrid query (0.7 vector / 0.3 keyword)
 │       │
 │       ├── ingest/         ✅ turn an uploaded PDF into rows
 │       │   ├── service.py    validate → hash → store → parse → save (owner-aware)

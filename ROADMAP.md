@@ -558,3 +558,7 @@ The other two commands:
 uv run python -m clause.auth.codes list                    # who claimed what
 uv run python -m clause.auth.codes make-admin you@x.com    # unlimited, after you sign up
 Remember the two numbers are different things: the code's grant_count (3) never changes — it's the coupon's face value. Your allowance is copied to users.upload_grant at signup, and usage is counted on your user row.
+
+To make yourself admin -
+cd api
+uv run python -m clause.auth.codes make-admin bijeeta1@gmail.com

@@ -102,11 +102,20 @@ TIERING: dict[Task, ModelSpec] = {
 # anything I would have written about being right.
 SWEEP_TIERS: tuple[ModelSpec, ...] = (SOL, TERRA, LUNA, MINI, NANO)
 
-# Embeddings are local — fastembed / BAAI/bge-small-en-v1.5, 384-dim, ONNX. Zero marginal cost and
-# no API key. See SPEC.md §3.3, and note that cost is explicitly NOT the reason for that choice.
-# Lands in V2; the risk scan does not use retrieval (SPEC.md §4.1).
-EMBEDDING_MODEL = "BAAI/bge-small-en-v1.5"
+# Embeddings — OpenAI's API, NOT the local ONNX model the spec originally chose. The reversal is
+# deliberate and the spec pre-authorised it: SPEC.md §3.3 chose local embeddings for *fewer
+# dependencies* and said in as many words that "cost does not decide this". The constraint that
+# flipped the trade is RAM — the API now lives on Render's free tier (512 MB, ROADMAP.md §2.3), and
+# fastembed's ONNX runtime plus model weights need a few hundred MB we do not have. The 2 GB Render
+# tier is ~$25/month; this API call is ~$0.0006 per contract. When the trade-off changes shape that
+# much, the decision flips with it.
+#
+# DIM stays 384: text-embedding-3-* models natively emit shortened vectors via the `dimensions`
+# request parameter (verified against the live API, 2026-07-17), so the vector(384) column and HNSW
+# index shipped in migration 001 fit unchanged. Price: $0.02 per million tokens.
+EMBEDDING_MODEL = "text-embedding-3-small"
 EMBEDDING_DIM = 384
+EMBEDDING_PRICE_PER_MTOK = 0.02
 
 
 def for_task(task: Task) -> ModelSpec:

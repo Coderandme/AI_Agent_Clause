@@ -34,6 +34,7 @@ from clause.agent.execute import AnalysisState, ToolExecutor
 from clause.agent.verify import DocumentIndex
 from clause.config import settings
 from clause.db import pool
+from clause.retrieval.search import index_document
 
 log = logging.getLogger(__name__)
 
@@ -102,6 +103,17 @@ async def run_and_store(analysis_id: UUID, document_id: UUID, spend_key: str) ->
     if not full_text:
         await _fail(analysis_id, "The document has no extractable text to analyse.")
         return
+
+    # Index for Q&A (V2): chunk + embed into `chunks`. ~1-2s and ~$0.0006 next to a 60-80s scan.
+    # Non-fatal on purpose — the risk scan is the marquee; if indexing fails, Q&A degrades to
+    # "not indexed" and the scan proceeds untouched.
+    try:
+        async with p.acquire() as conn:
+            await index_document(
+                conn, AsyncOpenAI(api_key=settings().openai_api_key), document_id, full_text
+            )
+    except Exception:  # noqa: BLE001 — Q&A is optional; the scan is not
+        log.exception("indexing %s for Q&A failed; continuing with the scan", document_id)
 
     pages = [(r["page_number"], r["char_start"], r["char_end"]) for r in page_rows]
 
